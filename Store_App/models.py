@@ -7,6 +7,7 @@ class Item(models.Model):
     barcode = models.PositiveIntegerField(unique=True)
     wholesale_pricse = models.PositiveIntegerField()
     retailer_pricse = models.PositiveIntegerField()
+    stock = models.IntegerField()
     description = models.TextField()
     def __str__(self):
         return self.name;

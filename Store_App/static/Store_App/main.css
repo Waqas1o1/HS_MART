@@ -1,119 +1,142 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-.container-fluid {
-    width: 100vw;
-    height: 100vh;
-    background: linear-gradient(to bottom right, #0cd7e6 0%, #e93f94 70%);
-}
-
-.centercontiner {
-    background-color: rgb(236, 228, 228);
-    box-shadow: 5px 10px 18px black;
-    border-radius: 10px;
-    width: 100%;
-    height: 75vh;
-}
-
-.center_div {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-#scanner-container {
-    border: 1px dotted black;
-    width: 483px;
-    height: 324px;
-    border-radius: 20px;
-}
-
-#scanner-container video {
-    border-radius: 20px;
-}
-
-ul li {
-    color: red;
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-    font-weight: 500;
-}
-
-.badge-pill input {
-    outline: none;
-    border: none;
-    color: white;
-    background: transparent;
-    width: 40px;
-}
-
-.qty {
-    outline: none;
-    border: none;
-    background: transparent;
-    text-align: center;
-    color: rgb(0, 44, 0);
-    font-weight: 500;
-}
-
-.intro::placeholder {
-    color: darkgreen;
-    font-weight: 500;
-}
-
-.itembtn {
-    font-size: 16px;
-    font-weight: 500;
-    outline: none;
-    border: none;
-    background-color: transparent;
-    line-height: 2;
-    color: #240c7c;
-    width: 120px;
-    text-align: left;
-}
-
-.pribox {
-    border: none;
-    outline: none;
-    text-align: start;
-    margin: auto;
-    text-align: center;
-    margin-right: 50px;
-}
-
-
-/* GrandTotal */
-
-.totallabel {
-    font-size: 20px;
-    font-weight: 500;
-    display: flex;
-    justify-content: flex-end;
-    margin-top: -30px;
-    color: rgb(64, 64, 219);
-    margin-right: 30px;
-    margin-bottom: 10px;
-}
-
-
-/* Bill_Genrated */
-
-.invoice-title h2,
-.invoice-title h3 {
-    display: inline-block;
-}
-
-.table>tbody>tr>.no-line {
-    border-top: none;
-}
-
-.table>thead>tr>.no-line {
-    border-bottom: none;
-}
-
-.table>tbody>tr>.thick-line {
-    border-top: 2px solid;
-}
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    .container-fluid {
+        width: 100vw;
+        height: 100vh;
+        background: linear-gradient(to bottom right, #0cd7e6 0%, #e93f94 70%);
+    }
+    
+    .centercontiner {
+        background-color: rgb(236, 228, 228);
+        box-shadow: 5px 10px 18px black;
+        border-radius: 10px;
+        width: 100%;
+        height: 75vh;
+    }
+    
+    .center_div {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    #scanner-container {
+        border: 1px dotted black;
+        width: 483px;
+        height: 324px;
+        border-radius: 20px;
+    }
+    
+    #scanner-container video {
+        border-radius: 20px;
+    }
+    
+    ul li {
+        color: red;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        font-weight: 500;
+    }
+    
+    .badge-pill input {
+        outline: none;
+        border: none;
+        color: white;
+        background: transparent;
+        width: 40px;
+    }
+    
+    .qty {
+        outline: none;
+        border: none;
+        background: transparent;
+        text-align: center;
+        color: rgb(0, 44, 0);
+        font-weight: 500;
+        width: 20%;
+    }
+    
+    .intro::placeholder {
+        color: darkgreen;
+        font-weight: 500;
+    }
+    
+    .itembtn {
+        font-size: 16px;
+        font-weight: 500;
+        outline: none;
+        border: none;
+        background-color: transparent;
+        line-height: 2;
+        color: #240c7c;
+        width: 120px;
+        text-align: left;
+    }
+    
+    .pribox {
+        border: none;
+        outline: none;
+        text-align: start;
+        margin: auto;
+        text-align: center;
+        margin-right: 50px;
+    }
+    /* GrandTotal */
+    
+    .totallabel {
+        font-size: 20px;
+        font-weight: 500;
+        display: flex;
+        justify-content: flex-end;
+        margin-top: -30px;
+        color: rgb(64, 64, 219);
+        margin-right: 30px;
+        margin-bottom: 10px;
+    }
+    /* Bill_Genrated */
+    
+    .invoice-title h2,
+    .invoice-title h3 {
+        display: inline-block;
+    }
+    
+    .table>tbody>tr>.no-line {
+        border-top: none;
+    }
+    
+    .table>thead>tr>.no-line {
+        border-bottom: none;
+    }
+    
+    .table>tbody>tr>.thick-line {
+        border-top: 2px solid;
+    }
+    /* Loader */
+    
+    @keyframes animation {
+        0%,
+        100% {
+            animation-timing-function: cubic-bezier(0.45, 0, 0.9, 0.55)
+        }
+        0% {
+            transform: translate(0, 0)
+        }
+        50% {
+            transform: translate(0, 76px);
+            animation-timing-function: cubic-bezier(0, 0.45, 0.55, 0.9);
+        }
+        100% {
+            transform: translate(0, 0);
+        }
+    }
+    
+    .Animation_logo {
+        /* position: absolute; */
+        width: 50px;
+        height: 50px;
+        background: transparent;
+        animation: animation 10s linear infinite;
+    }
