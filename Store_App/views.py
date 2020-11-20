@@ -87,7 +87,7 @@ def GenrateBill_Genrated(request):
                             return HttpResponse(f'<p style="font-size:100px">&#128556;</p> <h3>Stock me itni  {i["Name"]} nhi hain</h3>''')
                         itm.stock -=  i['Quantity']
                         itm.save()
-                Bill_Genrated = Bill(customer_name=Khaata_Name,khaata_name=is_Khaata,amount=total_amount,details=cart[0])
+                Bill_Genrated = Bill(customer_name=Khaata_Name,khaata_name=is_Khaata,amount=total_amount,details=cartlist)
                 Bill_Genrated.save()
                 # Add Credit
                 is_Khaata.credit += int(total_amount)

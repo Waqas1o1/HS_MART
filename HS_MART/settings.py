@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Store_App.apps.StoreAppConfig',
+    'DataAnalysis.apps.DataanalysisConfig',
 ]
 
 MIDDLEWARE = [

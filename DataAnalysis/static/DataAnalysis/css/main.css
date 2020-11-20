@@ -1,0 +1,34 @@
+body {
+    background: #e8cbc0;
+    background: -webkit-linear-gradient(to right, #e8cbc0, #636fa4);
+    background: linear-gradient(to right, #e8cbc0, #636fa4);
+    min-height: 100vh;
+}
+
+table {
+    width: 716px;
+    border-spacing: 0;
+}
+
+tbody,
+thead tr {
+    display: block;
+}
+
+tbody {
+    height: 150px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+tbody td,
+thead th {
+    width: 140px;
+}
+
+thead th:last-child {
+    width: 156px;
+}
+
+
+/* Bill */

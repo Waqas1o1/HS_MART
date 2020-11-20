@@ -1,0 +1,230 @@
+{% extends 'DataAnalysis/Basic.html' %} {% load static %} {% block title %}
+<title> Bill Ananlysis</title>
+{% load static %} {% endblock %} {% block css %}
+<link rel="stylesheet" href="{% static 'DataAnalysis/css/main.css' %}"> {% endblock %} {% block body %}
+<!-- For demo purpose -->
+<div class="container py-5">
+    <div class="row text-center text-white">
+        <div class="col-lg-8 mx-auto">
+            <img src="https://seeklogo.com/images/H/hs-logo-C6FDDDC644-seeklogo.com.png" class='bg-transparent border-0 img-fluid' alt="">
+            <h1 class="display-4">Bill Analysis</h1>
+            <p class="lead mb-0">Check your Bill details in this section.</p>
+            <p class="lead">Snippet by
+                <a href="/" class="text-white">
+                    <u>Muhammad Waqas</u>
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+<!-- End -->
+
+<div class="container">
+    <div class="row text-center">
+        <div class="col-10 ml-4">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text text-info">Select Date</span>
+                </div>
+                <input type="text" placeholder="From" id="Datefrom" class="datepicker form-control text-center text-danger font-weight-bold">
+                <input type="text" placeholder="To" id='Dateto' class=" datepicker form-control text-center text-danger font-weight-bold">
+            </div>
+        </div>
+        <div class="col-10 ml-4">
+            <input type="text" placeholder="Enter Khaata Name" class="form-control mt-2 text-center font-weight-bold" id='khaataid'>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center mt-2">
+        <button class="btn btn-primary" style="font-weight: 500;" onclick="GetBills()">Get Bill</button>
+    </div>
+    <div class="row text-center" id='loadBill'>
+        {% for bill in Bill %}
+        <!-- Team item -->
+        <div class="col-xl-3 col-sm-6 col-md-6 col-6 col-mb-5 m-4">
+            <div class="card" style="width: 330px;">
+                <div class="card-body">
+                    <h5 class="card-title">Bill</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{bill.Name}}</h6>
+                    <div class="card-text">
+                        <!-- Information -->
+                        <table class="table table-responsive ">
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Khaata Name:</th>
+                                    <td colspan="3">{{bill.Khaata_name}}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Date:</th>
+                                    <td colspan="3">{{bill.genrated_date}}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Contact:</th>
+                                    <td colspan="3">0{{bill.Khaata_name.contact}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!-- Order -->
+                        <div class="table table-responsive table-sm">
+                            <table class="table table-bordered table-dark">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Item</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for b in bill.details %}
+                                    <tr>
+                                        <th scope="row">{{b.Name}}</th>
+                                        <td>{{b.Quantity}}</td>
+                                        <td>{{b.Pricse}}</td>
+                                        <td>{{b.Total_pricse}}</td>
+                                    </tr>
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <p class="text-muted">Sub Total :</p>
+                                <p class="text-success">{{bill.SubTotal}}</p>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <p class="text-muted">Discount :</p>
+                                <p class="text-success">0</p>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <p class="text-muted">Grand Total :</p>
+                                <p class="text-success">{{bill.Total_Amount}}</p>
+                            </div>
+                        </p>
+                    </div>
+                    <!-- <a href="#" class="card-link">Card link</a> -->
+
+                </div>
+            </div>
+        </div>
+        <!-- End -->
+        {% endfor %}
+    </div>
+    {% endblock %} {% block Js%}
+    <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js">
+    </script>
+    <script>
+        // Date time picker
+        $('.datepicker').datepicker();
+        $('.datepicker').datepicker({
+            weekdaysShort: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+            showMonthsShort: true
+        })
+
+        function GetBills() {
+            let date_from = document.getElementById('Datefrom').value
+            let date_to = document.getElementById('Dateto').value
+            let khaata = document.getElementById('khaataid').value
+            if (khaata == '' && (date_from == '' | date_to == '')) {
+                alert('Both Date required')
+                return
+            }
+            // Send Data 
+            var send_data = {
+                "date_from": date_from,
+                "date_to": date_to,
+                "khaata": khaata,
+                "csrfmiddlewaretoken": "{{ csrf_token }}"
+            }
+            $.ajax({
+                type: 'POST',
+                url: `/Analysis/`,
+                data: send_data,
+                encode: true,
+                success: function(data) {
+                    d = JSON.parse(data)
+                    if (d.length <= 0) {
+                        document.getElementById('loadBill').innerHTML =
+                            `<div class='d-felc justify-content-center mt-5'>
+                                <h3 class='text-success'>No data Found with ${khaata}</h3>
+                            </div>`
+                    }
+                    bill_str = ''
+                    for (let bill in d) {
+                        bill_str += `
+                        <div class="col-xl-3 col-sm-6 col-md-6 col-6 col-mb-5 m-4">
+                        <div class="card" style="width: 330px;">
+                            <div class="card-body">
+                                <h5 class="card-title">Bill</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">${d[bill].Name}</h6>
+                                <div class="card-text">
+                                    <!-- Information -->
+                                    <table class="table table-responsive ">
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row">Khaata Name:</th>
+                                                <td colspan="3">${d[bill].Khaata_name}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Date:</th>
+                                                <td colspan="3">${d[bill].genrated_date}</td>
+                                            </tr>
+                                            <tr>
+                                                
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <!-- Order -->
+                                    <div class="table table-responsive table-sm">
+                                        <table class="table table-bordered table-dark">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Item</th>
+                                                    <th scope="col">Qty</th>
+                                                    <th scope="col">Price</th>
+                                                    <th scope="col">Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody> `;
+                        for (let b in d[bill].details) {
+                            bill_str += `<tr>
+                                        <th scope="row">${d[bill].details[b].Name}</th>
+                                        <td>${d[bill].details[b].Quantity}</td>
+                                        <td>${d[bill].details[b].Pricse}</td>
+                                        <td>${(d[bill].details[b].Pricse) * (d[bill].details[b].Quantity)}</td>
+                                    </tr>`;
+                        }
+                        bill_str += `</tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <p class="text-muted">Sub Total :</p>
+                                            <p class="text-success">${d[bill].SubTotal}</p>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <p class="text-muted">Discount :</p>
+                                            <p class="text-success">0</p>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <p class="text-muted">Grand Total :</p>
+                                            <p class="text-success">${d[bill].Total_Amount}</p>
+                                        </div>
+                                    </p>
+                                </div>
+                                <!-- <a href="#" class="card-link">Card link</a> -->
+                            
+                            </div>
+                     </div>
+                    </div>`
+                    }
+                    document.getElementById('loadBill').innerHTML = bill_str
+                }
+            })
+        }
+    </script>
+    {% endblock %}

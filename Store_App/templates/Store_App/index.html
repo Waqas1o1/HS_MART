@@ -17,8 +17,8 @@
                 </a>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Analysis/">Analysis<span class="sr-only">(current)</span></a>
                         </li>
                     </ul>
                 </div>
@@ -105,6 +105,12 @@
                     let khaata_id = document.getElementById('khaataid').value;
                     let total = document.getElementById('GrandTotal').innerHTML;
                     let discount = document.getElementById('discountpricse').value;
+                    if (cartlist.length <= 0){
+                        document.getElementById('LoadBillDetails').innerHTML =
+                            `<span style='font-size:100px;'>&#128530;</span>
+                            <h3>Kiss ko add Karun...</h3>`;
+                        return
+                    }
                     if (khaata_id == '') {
                         document.getElementById('LoadBillDetails').innerHTML =
                             `<span style='font-size:100px;'>&#128530;</span>
@@ -440,4 +446,6 @@
     </div>
 </div>
 </div>
+
+
 {% endblock %}

@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models.query_utils import select_related_descend
-
+import datetime as d
 # Create your models here.
 class Item(models.Model):
     name = models.CharField(unique=True,max_length=30)
@@ -29,8 +29,11 @@ class Bill(models.Model):
     amount = models.FloatField()
     khaata_name = models.ForeignKey(Khaata,on_delete=models.CASCADE)
     buyername = models.CharField(max_length=50)
-    genrated_date = models.DateTimeField(auto_now=True)
+    genrated_date = models.DateTimeField(default=d.datetime.now())
     details = models.TextField()
     def __str__(self):
         return self.customer_name + str(self.id)
 
+
+    
+    

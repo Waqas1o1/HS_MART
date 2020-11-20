@@ -8,4 +8,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',RedirectView.as_view(url='Home/')),
     path('Home/',include('Store_App.urls')),
+    path('Analysis/',include('DataAnalysis.urls')),
 ]+ static(settings.MEDIA_URL,document_root= settings.MEDIA_ROOT)
