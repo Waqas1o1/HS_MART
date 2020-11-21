@@ -1,4 +1,4 @@
-{% extends 'DataAnalysis/Basic.html' %} {% load static %} {% block title %}
+{% extends 'Basic.html' %} {% load static %} {% block title %}
 <title> Bill Ananlysis</title>
 {% load static %} {% endblock %} {% block css %}
 <link rel="stylesheet" href="{% static 'DataAnalysis/css/main.css' %}"> {% endblock %} {% block body %}
@@ -26,8 +26,8 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text text-info">Select Date</span>
                 </div>
-                <input type="text" placeholder="From" id="Datefrom" class="datepicker form-control text-center text-danger font-weight-bold">
-                <input type="text" placeholder="To" id='Dateto' class=" datepicker form-control text-center text-danger font-weight-bold">
+                <input type="text" placeholder="From" id="Datefrom" autocomplete="off" class="datepicker form-control text-center text-primary font-weight-bold">
+                <input type="text" placeholder="To" id='Dateto' autocomplete="off" class=" datepicker form-control text-center text-primary font-weight-bold">
             </div>
         </div>
         <div class="col-10 ml-4">
@@ -112,23 +112,16 @@
         <!-- End -->
         {% endfor %}
     </div>
-    {% endblock %} {% block Js%}
-    <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js">
-    </script>
+    {% endblock %}
+    <!-- JavaScripts -->
+    {% block Js %}
     <script>
-        // Date time picker
-        $('.datepicker').datepicker();
-        $('.datepicker').datepicker({
-            weekdaysShort: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-            showMonthsShort: true
-        })
-
         function GetBills() {
             let date_from = document.getElementById('Datefrom').value
             let date_to = document.getElementById('Dateto').value
             let khaata = document.getElementById('khaataid').value
             if (khaata == '' && (date_from == '' | date_to == '')) {
-                alert('Both Date required')
+                alert('Date required for filter')
                 return
             }
             // Send Data 
@@ -145,11 +138,10 @@
                 encode: true,
                 success: function(data) {
                     d = JSON.parse(data)
-                    if (d.length <= 0) {
-                        document.getElementById('loadBill').innerHTML =
-                            `<div class='d-felc justify-content-center mt-5'>
-                                <h3 class='text-success'>No data Found with ${khaata}</h3>
-                            </div>`
+                    if (d.length <= 0 | d == null) {
+                        document.getElementById('loadBill').innerHTML = `<div class='d-felc justify-content-center mt-5'>
+                                                                            <h3 class='text-success'>No data Found with ${khaata}</h3>
+                                                                        </div>`;
                     }
                     bill_str = ''
                     for (let bill in d) {

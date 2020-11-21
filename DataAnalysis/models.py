@@ -11,3 +11,4 @@ class Credit_Transsaction(models.Model):
     Update = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return self.Khaata.name + 'On ' + self.Transection_Date + 'for ' + self.Transaction_Message
+
