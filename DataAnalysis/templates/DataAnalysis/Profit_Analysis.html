@@ -1,0 +1,141 @@
+{% extends 'Basic.html' %} {% load static %}
+<!-- Title  -->
+{% block title %}Profit Graph{% endblock %}
+<!--Custom Css -->
+{% block css %}
+<link rel="stylesheet" href="{% static 'DataAnalysis/css/Graph.css' %}"> {% endblock %}
+<!-- Main Body -->
+<!-- Custom JS -->
+{% block body %}
+<div class="container py-2">
+    <div class="row text-center text-white">
+        <div class="col-lg-8 mx-auto">
+            <img src="https://seeklogo.com/images/H/hs-logo-C6FDDDC644-seeklogo.com.png" class='bg-transparent border-0 img-fluid' alt="">
+            <h1 class="display-4">Profit Analysis</h1>
+            <p class="lead mb-0">Check your Profit details according to months in this section.</p>
+            <p class="lead">Snippet by
+                <a href="/" class="text-white">
+                    <u>Muhammad Waqas</u>
+                </a>
+            </p>
+            <p class="d-flex justify-content-between">
+                <a href="/Home" class="text-light" style="font-weight: 500;">Home</a> |
+                <a href="/Analysis/" class="text-light" style="font-weight: 500;">Bill Analysis</a>
+            </p>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row m-3">
+        <div class="input-group d-flex justify-content-center">
+            <div class="input-group-prepend">
+                <span class="input-group-text font-weight-bold">Select Year</span>
+            </div>
+            <button class="btn dropdown-toggle" style="color: palevioletred;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Year
+            </button>
+            <!-- Year FIlter -->
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id='dropdown_menu'>
+
+            </div>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center flex-colum mt-5">
+        <div class='graph col-12'>
+            <h3 class=" text-light" id='currentyear'>2020</h3>
+            <canvas id="pie_chart"></canvas>
+        </div>
+    </div>
+</div>
+{% endblock %} {% block Js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script>
+    var date = new Date();
+    let year = date.getFullYear();
+    var years = '';
+
+    years = `<input class="dropdown-item" onClick="Year_Change(this.value)" readonly value='${year}'/>`
+    years += `<input class="dropdown-item" onClick="Year_Change(this.value)" readonly value='${year -1}'/>`
+    years += `<input class="dropdown-item" onClick="Year_Change(this.value)" readonly value='${year -2}'/>`
+    years += `<input class="dropdown-item" onClick="Year_Change(this.value)" readonly value='${year -3}'/>`
+    years += `<input class="dropdown-item" onClick="Year_Change(this.value)" readonly value='${year -4}'/>`
+    document.getElementById('dropdown_menu').innerHTML = years;
+
+    function Year_Change(v) {
+        document.getElementById('dropdownMenuButton').innerHTML = v;
+        document.getElementById('currentyear').innerHTML = v;
+        Get_Chart(v);
+    }
+    Get_Chart('2020');
+
+    function Get_Chart(y) {
+        $.ajax({
+            url: `/Analysis/GetGraph/${y}`,
+            type: 'GET',
+            encode: true,
+            success: function(data) {
+                var months = []
+                var profit = []
+                for (k in data[0]) {
+                    months.push(k)
+                    profit.push(data[0][k])
+                }
+                Genrate_Chart(months, profit);
+            }
+        })
+    }
+    // Chart Genration
+    function Genrate_Chart(m, p) {
+        var ctx = document.getElementById('pie_chart');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: m,
+                datasets: [{
+                    label: 'Profit',
+                    data: p,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(355, 99, 132, 0.2)',
+                        'rgba(574, 162, 235, 0.2)',
+                        'rgba(955, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 2,
+
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    }
+</script>
+
+
+{% endblock %}

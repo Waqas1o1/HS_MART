@@ -31,4 +31,8 @@ thead th:last-child {
 }
 
 
-/* Bill */
+/* Card */
+
+.card {
+    margin-left: -23px;
+}
