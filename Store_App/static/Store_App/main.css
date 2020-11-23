@@ -4,35 +4,8 @@
         box-sizing: border-box;
     }
     
-    .container-fluid {
-        width: 100vw;
-        height: 100vh;
-        background: linear-gradient(to bottom right, #0cd7e6 0%, #e93f94 70%);
-    }
-    
-    .centercontiner {
-        background-color: rgb(236, 228, 228);
-        box-shadow: 5px 10px 18px black;
-        border-radius: 10px;
-        width: 100%;
-        height: 75vh;
-    }
-    
-    .center_div {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-    
-    #scanner-container {
-        border: 1px dotted black;
-        width: 483px;
-        height: 324px;
-        border-radius: 20px;
-    }
-    
-    #scanner-container video {
-        border-radius: 20px;
+    body {
+        background: #000000
     }
     
     ul li {
@@ -47,16 +20,6 @@
         color: white;
         background: transparent;
         width: 40px;
-    }
-    
-    .qty {
-        outline: none;
-        border: none;
-        background: transparent;
-        text-align: center;
-        color: rgb(0, 44, 0);
-        font-weight: 500;
-        width: 20%;
     }
     
     .intro::placeholder {
@@ -76,26 +39,18 @@
         text-align: left;
     }
     
-    .pribox {
+    .input {
         border: none;
-        outline: none;
-        text-align: start;
-        margin: auto;
-        text-align: center;
-        margin-right: 50px;
+        background: transparent;
+        height: 40px;
+        outline: green;
+        color: white;
+    }
+    
+    .input::placeholder {
+        color: lightgreen;
     }
     /* GrandTotal */
-    
-    .totallabel {
-        font-size: 20px;
-        font-weight: 500;
-        display: flex;
-        justify-content: flex-end;
-        margin-top: -30px;
-        color: rgb(64, 64, 219);
-        margin-right: 30px;
-        margin-bottom: 10px;
-    }
     /* Bill_Genrated */
     
     .invoice-title h2,

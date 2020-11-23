@@ -5,453 +5,347 @@
 <link rel="stylesheet" href="{% static 'Store_App/main.css' %}"> {% endblock %}
 <!-- Main Body -->
 {% block body %}
-
-<div class='container-fluid '>
-    <div class='row d-flex justify-content-center'>
-        <div class='col-12 center_div'>
-            <!-- Navigation Bar  -->
-            <nav class="navbar navbar-expand-lg navbar-dark">
-                <a class="navbar-brand" href="#">
-                    <img src="https://seeklogo.com/images/H/hs-logo-C6FDDDC644-seeklogo.com.png" class="d-inline-block align-top Animation_logo" alt="" loading="lazy">
-                    <span style="font-family: 'Grenze Gotisch', cursive;font-size: 50px !important;">Cash & Carry</span>
-                </a>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ml-auto">
-                    <li class='nav-item nav-link text-dark'>
-                        <b> Data Analysis:</b>
-                    </li> 
-                        <li class="nav-item">
-                            <a class="nav-link" href="/Analysis/ProfitGraph/">Profit<span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/Analysis/">Bills<span class="sr-only">(current)</span></a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-            <!-- Alart By Mesage -->
-            <div class="alert collapse mr-2" id='itemalert' role="alert">
-                <strong>Item Alart!</strong> <span id='AlertMessage'>No Meaasage</span>
-                <button type="button" class="close" data-dismiss="alert" id='closebtn' aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="centercontiner mt-5 d-flex justify-content-between">
-                <!-- Came Section -->
-                <div class="left mt-2 ml-2">
-                    <input type="button" id='cambtn' class="btn btn-info m-2" value="Start/Stop the scanner">
-                    <div id="scanner-container"></div>
-                </div>
-                <!-- Result Section -->
-                <div class="right m-3" style="width:100%;">
-                    <div class="input-group mb-2">
-                        <span class="input-group-text">Find Products</span>
-                        <input type="number" min="0" aria-label="Barcode" class="form-control" placeholder="By Barcode" id='inputbarcode'>
-                        <input type="text" aria-label="product name" class="form-control" id='productname' placeholder="By Name" name="productname">
-                    </div>
-                    <!-- Product List Label -->
-                    <ul class="list-group">
-                        <li class=" list-group-item d-flex justify-content-between align-items-center mb-1">
-                            Product Name
-                            <input type="text" class="qty intro" value="Quantity">
-                            <input type="text" class="qty intro" value="Stock">
-                            <input type="text" class="qty intro" value="Total Pricse">
-                            <span class="badge badge-warning badge-pill ">Retailer Pricse</span>
-                        </li>
-                    </ul>
-                    <!-- Genrate List -->
-                    <ul class="list-group" style="width:auto;height:290px; overflow: auto" class="mr-2" id='genratlist'>
-                    </ul>
-                    <!-- Button trigger modal -->
-                    <div>
-                        <input type="number" class="qty mt-2" onkeyup="CalculateTotal()" id='discountpricse' min="0" value='0' placeholder="Discount Pricse">
-                        <input type="text" class="intro mt-2 text-center" id='khaataid' placeholder="Find Khaata">
-                        <button type="button" class="btn btn-primary mb-2" data-toggle="modal" onclick="GenrateBill_Genrated()" data-target="#exampleModal">
-                        Genrate Bill_Genrated
-                        </button>
-                        <label for="GrandTotal" class="totallabel">Rs.<span id='GrandTotal'>0</span></label>
-                    </div>
-                    <!-- Modal -->
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Bill</h5>
-                                    <button type="button" class="close" data-dismiss="modal" onclick="Close()" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body d-flex justify-content-center align-items-center flex-column" id='LoadBillDetails'>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Continue</button>
-                                    <button type="button" class="btn btn-secondary" onclick="Close()">Close</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% block Js %}
-
-            <!-- Include the image-diff library -->
-            <script src="https://cdn.rawgit.com/serratus/quaggaJS/0420d5e0/dist/quagga.min.js "></script>
-            <!-- Qr / Barcode Scaneer-->
-            <!-- Qr Scaner -->
-            <script>
-                var code = new Set();
-                var cartlist = [];
-
-                function Close() {
-                    location.reload();
-                }
-
-                function GenrateBill_Genrated() {
-                    // Get Bill_Genrated Cridentials from form
-                    let khaata_id = document.getElementById('khaataid').value;
-                    let total = document.getElementById('GrandTotal').innerHTML;
-                    let discount = document.getElementById('discountpricse').value;
-                    if (cartlist.length <= 0){
-                        document.getElementById('LoadBillDetails').innerHTML =
-                            `<span style='font-size:100px;'>&#128530;</span>
-                            <h3>Kiss ko add Karun...</h3>`;
-                        return
-                    }
-                    if (khaata_id == '') {
-                        document.getElementById('LoadBillDetails').innerHTML =
-                            `<span style='font-size:100px;'>&#128530;</span>
-                            <h3>Kiss ke Khaata Dalun...</h3>`;
-                        return
-                    }
-                    let send_cart = {
-                            'CartLists': JSON.stringify(cartlist),
-                            'khaata': khaata_id,
-                            'total_amount': total,
-                            'discount': discount,
-                            'csrfmiddlewaretoken': '{{ csrf_token }}'
-                        }
-                        // Khata Genration Backend
-                    $.ajax({
-                        type: 'POST',
-                        url: 'GenrateBill_Genrated/',
-                        data: send_cart,
-                        encode: true,
-                    }).done(function(data) {
-                        document.getElementById('LoadBillDetails').innerHTML = data;
-                    })
-
-                }
-
-                function QtyChanged(id) {
-                    let pdt = id.slice(3)
-                    let value = document.getElementById('qty' + pdt).value;
-                    for (let c in cartlist) {
-                        if (cartlist[c]['Barcode'] == pdt) {
-                            let total = value * cartlist[c]['Pricse'];
-                            cartlist[c]['Total_pricse'] = total;
-                            cartlist[c]['Quantity'] = parseInt(value);
-                            document.getElementById('total' + pdt).value = total;
-                        }
-                    }
-                    CalculateTotal();
-                }
-
-                function CalculateTotal() {
-                    let total = 0;
-                    for (var c in cartlist) {
-                        total += cartlist[c]['Pricse'] * cartlist[c]['Quantity'];
-                    }
-                    let discount = document.getElementById('discountpricse').value;
-                    document.getElementById('GrandTotal').innerHTML = total - discount;
-                }
-
-                function loadItemToCartlist() {
-                    Re_Genrate_LIST();
-                }
-
-                function ShowAlert(message, alart_class, duration) {
-                    document.getElementById('AlertMessage').innerHTML = message;
-                    $('#itemalert').show('fade');
-                    $('#itemalert').toggleClass(alart_class, true)
-
-                    setTimeout(function() {
-                        $('#itemalert').hide('fade');
-                    }, duration)
-                }
-
-                function play(audio_link) {
-                    var audio = new Audio(audio_link);
-                    audio.play();
-                }
-
-                Re_Genrate_LIST = function(bar = 0) {
-                        if (bar != 0) {
-                            code.delete(bar);
-                            for (var l in cartlist) {
-                                if (cartlist[l]['Barcode'] == bar) {
-                                    ShowAlert(`Item ${cartlist[l]['Name']} Deleted!`, 'alert-warning', 2050);
-                                    // delete(cartlist[l]);
-                                    cartlist = cartlist.filter(function(el) {
-                                        return el != cartlist[l]
-                                    })
-                                    play('https://actions.google.com/sounds/v1/doors/cupboard_door.ogg');
-                                }
-                            }
-
-                        }
-                        document.getElementById('genratlist').innerHTML = null;
-                        for (let item in cartlist.reverse()) {
-                            document.getElementById('genratlist').innerHTML += `
-                            <li class="list-group-item d-flex justify-content-around align-items-center">
-                                        <button type="button" class="itembtn" onclick='Re_Genrate_LIST(${cartlist[item]['Barcode']})' aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                            ${cartlist[item]['Name']}
-                                        </button>
-                                       
-                                        <input type="number" id="qty${cartlist[item]['Barcode']}" class="qty" onkeyup='QtyChanged(this.id)' value="${cartlist[item]['Quantity']}" min="0">
-                                        <input type="number"  class="qty" value="${cartlist[item]['Stock']}" readonly>
-                                        <input type="number" id="total${cartlist[item]['Barcode']}" class='qty pribox' value='${cartlist[item]['Total_pricse']}' min="0 "/>
-                                        <span class="badge badge-primary badge-pill" id="rep${cartlist[item]['Barcode']}">${cartlist[item]['Pricse']}</span>
-                                       
-                            </li>`;
-                        }
-
-                        CalculateTotal();
-                    }
-                    // Add Item
-                function AddItemByBarcode(e) {
-                    if (e.keyCode == 13) {
-                        var value = document.getElementById('inputbarcode').value;
-                        // var cartlist = [];
-                        $.ajax({
-                            url: `Barcode/${value}`,
-                            type: 'GET',
-                            encode: true,
-                            success: function(data) {
-                                if (data != 'Not found') {
-                                    var item = JSON.parse(data);
-                                    if (code.has(item[0]['Barcode']) == false) {
-                                        code.add(item[0]['Barcode']);
-                                        cartlist.push({
-                                            'Name': item[0]['Name'],
-                                            'Pricse': item[0]['Retailer_pricse'],
-                                            'Barcode': item[0]['Barcode'],
-                                            'Quantity': 1,
-                                            'Stock': item[0]['Stock'],
-                                            'Total_pricse': item[0]['Retailer_pricse'],
-                                        });
-                                        loadItemToCartlist(item);
-                                        play('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
-                                        ShowAlert('Item Added To CartList', 'alert-success', 3000);
-                                    } else {
-                                        ShowAlert('Item Already Exit in Cartlist', 'alert-dark', 2000);
-                                        play('https://actions.google.com/sounds/v1/tools/drill_gear.ogg');
-                                    }
-
-                                } else {
-                                    ShowAlert('No Item found with this barCode ! Retry:', 'alert-primary', 3000);
-                                    play('https://actions.google.com/sounds/v1/tools/drill_gear.ogg');
-                                }
-                            }
-                        })
-                    }
-                };
-                document.getElementById('inputbarcode').addEventListener('keydown', AddItemByBarcode);
-
-                function AddItemToCartlist(barcode) {
-                    $.ajax({
-                            url: `/Home/Item/${barcode}`,
-                            type: 'GET',
-                            encode: true
-                        })
-                        .done(function(data) {
-                            if (data != 'Not found') {
-                                let item = JSON.parse(data);
-                                if (code.has(item[0]['Barcode']) != true) {
-                                    console.log('Her');
-                                    code.add(item[0]['Barcode']);
-                                    cartlist.push({
-                                        'Name': item[0]['Name'],
-                                        'Pricse': item[0]['Retailer_pricse'],
-                                        'Barcode': item[0]['Barcode'],
-                                        'Pricse': item[0]['Retailer_pricse'],
-                                        'Quantity': 1,
-                                        'Total_pricse': item[0]['Retailer_pricse'],
-                                    });
-                                    loadItemToCartlist(item);
-                                    document.getElementById('inputbarcode').value = parseInt(item[0]['Barcode']);
-                                    play('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
-                                    ShowAlert('Item AddedTo CartList', 'alert-sccuess', 3000);
-                                } //  else {
-                                //     ShowAlert('Item Already Exit in Cartlist', 'alert-dark', 2000);
-                                //     play('https://actions.google.com/sounds/v1/tools/drill_gear.ogg');
-                                // }
-                            }
-                        })
-                }
-
-                function AddItemByProcuntName(e) {
-                    if (e.keyCode == 13) {
-                        var value = document.getElementById('productname').value;
-                        $.ajax({
-                            url: `Productname/${value}`,
-                            type: 'GET',
-                            encode: true,
-                            success: function(data) {
-                                if (data != 'Not found') {
-                                    var item = JSON.parse(data);
-                                    if (code.has(item[0]['Barcode']) == false) {
-                                        code.add(item[0]['Barcode']);
-                                        cartlist.push({
-                                            'Name': item[0]['Name'],
-                                            'Pricse': item[0]['Retailer_pricse'],
-                                            'Barcode': item[0]['Barcode'],
-                                            'Pricse': item[0]['Retailer_pricse'],
-                                            'Quantity': 1,
-                                            'Stock': item[0]['Stock'],
-                                            'Total_pricse': item[0]['Retailer_pricse'],
-                                        });
-                                        loadItemToCartlist(item);
-                                        play('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
-                                        ShowAlert('Item Added To CartList', 'alert-success', 3000);
-                                        document.getElementById('inputbarcode').value = parseInt(item[0]['Barcode']);
-                                    } else {
-                                        ShowAlert('Item Already Exit in Cartlist', 'alert-dark', 2000);
-                                        play('https://actions.google.com/sounds/v1/tools/drill_gear.ogg');
-                                    }
-                                    CalculateTotal();
-                                } else {
-                                    ShowAlert('No Item found with this barCode ! Retry:', 'alert-primary', 3000);
-                                    play('https://actions.google.com/sounds/v1/tools/drill_gear.ogg');
-                                }
-                            }
-                        })
-                    }
-                };
-                document.getElementById('productname').addEventListener('keydown', AddItemByProcuntName);
-
-
-                // QR SCANNER
-                var _scannerIsRunning = false;
-
-                function startScanner() {
-                    Quagga.init({
-                        inputStream: {
-                            name: "Live",
-                            type: "LiveStream",
-                            target: document.querySelector('#scanner-container'),
-                            constraints: {
-                                width: 480,
-                                height: 320,
-                                facingMode: "environment"
-                            },
-                        },
-                        decoder: {
-                            readers: [
-                                "code_128_reader",
-                                "ean_reader",
-                                "ean_8_reader",
-                                "code_39_reader",
-                                "code_39_vin_reader",
-                                "codabar_reader",
-                                "upc_reader",
-                                "upc_e_reader",
-                                "i2of5_reader"
-                            ],
-                            debug: {
-                                showCanvas: true,
-                                showPatches: true,
-                                showFoundPatches: true,
-                                showSkeleton: true,
-                                showLabels: true,
-                                showPatchLabels: true,
-                                showRemainingPatchLabels: true,
-                                boxFromPatches: {
-                                    showTransformed: true,
-                                    showTransformedBox: true,
-                                    showBB: true
-                                }
-                            }
-                        },
-
-                    }, function(err) {
-                        if (err) {
-                            alert(err);
-                            return
-                        }
-
-                        console.log("Initialization finished. Ready to start");
-                        Quagga.start();
-
-                        // Set flag to is running
-                        _scannerIsRunning = true;
-                    });
-
-                    Quagga.onProcessed(function(result) {
-                        var drawingCtx = Quagga.canvas.ctx.overlay,
-                            drawingCanvas = Quagga.canvas.dom.overlay;
-                        if (result) {
-                            if (result.boxes) {
-                                drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(drawingCanvas.getAttribute("height")));
-                                result.boxes.filter(function(box) {
-                                    return box !== result.box;
-                                }).forEach(function(box) {
-                                    Quagga.ImageDebug.drawPath(box, {
-                                        x: 0,
-                                        y: 1
-                                    }, drawingCtx, {
-                                        color: "green",
-                                        lineWidth: 2
-                                    });
-                                });
-                            }
-
-                            if (result.box) {
-                                Quagga.ImageDebug.drawPath(result.box, {
-                                    x: 0,
-                                    y: 1
-                                }, drawingCtx, {
-                                    color: "#00F",
-                                    lineWidth: 2
-                                });
-                            }
-
-                            if (result.codeResult && result.codeResult.code) {
-                                Quagga.ImageDebug.drawPath(result.line, {
-                                    x: 'x',
-                                    y: 'y'
-                                }, drawingCtx, {
-                                    color: 'red',
-                                    lineWidth: 3
-                                });
-                            }
-                        }
-                    });
-
-
-                    Quagga.onDetected(function(result) {
-                        AddItemToCartlist(result.codeResult.code);
-                        console.log(result.codeResult.code);
-                    });
-                }
-
-
-                // Start/stop scanner
-                document.getElementById("cambtn").addEventListener("click", function() {
-                    if (_scannerIsRunning) {
-                        Quagga.stop();
-                        location.reload();
-                    } else {
-                        startScanner();
-                    }
-                }, false);
-            </script>
-
-            {%endblock%}
+<div class="container">
+    <!-- Navigation Bar  -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="#">
+            <img src="https://seeklogo.com/images/H/hs-logo-C6FDDDC644-seeklogo.com.png" class="d-inline-block align-top Animation_logo" alt="" loading="lazy">
+            <span style="font-family: 'Grenze Gotisch', cursive;font-size: 50px !important;">Cash & Carry</span>
+        </a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class='nav-item nav-link text-dark'>
+                    <b class="text-success"> Data Analysis:</b>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="/Analysis/ProfitGraph/">Profit<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="/Analysis/">Bills<span class="sr-only">(current)</span></a>
+                </li>
+            </ul>
         </div>
+    </nav>
+    <!-- Alart By Mesage -->
+    <div class="alert collapse" id='itemalert' role="alert">
+        <strong>Item Alart!</strong> <span id='AlertMessage'>No Meaasage</span>
+        <button type="button" class="close" data-dismiss="alert" id='closebtn' aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
 </div>
+<div class='container position-relative' style="min-height:100vh;">
+    <!-- Main Row -->
+    <div>
+        <!-- Filter Section -->
+        <div class=" d-flex justify-content-center flex-column">
+            <div class="text-center mb-2">
+                <span class="text-light font-weight-normal">Find Products :</span>
+            </div>
+            <div class="d-flex justify-content-center mb-3">
+                <input type="number" min="0" aria-label="Barcode" class="form-control lableinput" placeholder="By Barcode" id='inputbarcode'>
+                <input type="text" aria-label="product name" class="form-control ml-2 lableinput " id='productname' placeholder="By Name" name="productname">
+            </div>
+        </div>
+        <!-- Button trigger modal -->
+        <div class="d-flex justify-content-center align-items-center ml-5">
+            <label for="#discountpricse" class="text-light mt-2">Discount:</label>
+            <input type="number" class="text-center mt-2 input" onkeyup="CalculateTotal()" id='discountpricse' min="0" value='0' placeholder="Discount Pricse">
+            <input type="text" class="mt-2 text-center input" id='khaataid' placeholder="Find Khaata">
+            <button type="button" class="btn btn-success mb-2" data-toggle="modal" onclick="GenrateBill_Genrated()" data-target="#exampleModal">
+                Genrate Bill_Genrated
+                </button>
+            <label for="GrandTotal" class="text-warning m-3">Rs.<span id='GrandTotal'>0</span></label>
+        </div>
+        <!-- Items Show Table -->
+        <!-- Product List Label -->
+        <div>
+            <ul class="list-group list-group-horizontal">
+                <li class="list-group-item list-group-item-primary" style="width:160px">Name</li>
+                <li class="list-group-item list-group-item-secondary"><input type="text" class='border-0 bg-transparent text-center' value="Qty"></li>
+                <li class="list-group-item list-group-item-warning"><input type="text" class='border-0 bg-transparent text-center' value="Stock"></li>
+                <li class="list-group-item list-group-item-danger"> <input type="text" class='border-0 bg-transparent text-center' value="Total Pricse"></li>
+                <li class="list-group-item list-group-item-info"><span class="badge badge-warning badge-pill ">Retailer Pricse</span></li>
+            </ul>
+        </div>
+
+        <!-- Genrate List -->
+        <div id='genratlist'>
+        </div>
+
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Bill</h5>
+                    <button type="button" class="close" data-dismiss="modal" onclick="Close()" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body d-flex justify-content-center align-items-center flex-column" id='LoadBillDetails'>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Continue</button>
+                    <button type="button" class="btn btn-secondary" onclick="Close()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% block Js %}
+
+    <!-- Include the image-diff library -->
+    <script src="https://cdn.rawgit.com/serratus/quaggaJS/0420d5e0/dist/quagga.min.js "></script>
+    <!-- Qr / Barcode Scaneer-->
+    <!-- Qr Scaner -->
+    <script>
+        var code = new Set();
+        var cartlist = [];
+
+        function Close() {
+            location.reload();
+        }
+
+        function GenrateBill_Genrated() {
+            // Get Bill_Genrated Cridentials from form
+            let khaata_id = document.getElementById('khaataid').value;
+            let total = document.getElementById('GrandTotal').innerHTML;
+            let discount = document.getElementById('discountpricse').value;
+            if (cartlist.length <= 0) {
+                document.getElementById('LoadBillDetails').innerHTML =
+                    `<span style='font-size:100px;'>&#128530;</span>
+                            <h3>Kiss ko add Karun...</h3>`;
+                return
+            }
+            if (khaata_id == '') {
+                document.getElementById('LoadBillDetails').innerHTML =
+                    `<span style='font-size:100px;'>&#128530;</span>
+                            <h3>Kiss ke Khaata Dalun...</h3>`;
+                return
+            }
+            let send_cart = {
+                    'CartLists': JSON.stringify(cartlist),
+                    'khaata': khaata_id,
+                    'total_amount': total,
+                    'discount': discount,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                }
+                // Khata Genration Backend
+            $.ajax({
+                type: 'POST',
+                url: 'GenrateBill_Genrated/',
+                data: send_cart,
+                encode: true,
+            }).done(function(data) {
+                document.getElementById('LoadBillDetails').innerHTML = data;
+            })
+
+        }
+
+        function QtyChanged(id) {
+            let pdt = id.slice(3)
+            let value = document.getElementById('qty' + pdt).value;
+            for (let c in cartlist) {
+                if (cartlist[c]['Barcode'] == pdt) {
+                    let total = value * cartlist[c]['Pricse'];
+                    cartlist[c]['Total_pricse'] = total;
+                    cartlist[c]['Quantity'] = parseInt(value);
+                    document.getElementById('total' + pdt).value = total;
+                }
+            }
+            CalculateTotal();
+        }
+
+        function CalculateTotal() {
+            let total = 0;
+            for (var c in cartlist) {
+                total += cartlist[c]['Pricse'] * cartlist[c]['Quantity'];
+            }
+            let discount = document.getElementById('discountpricse').value;
+            document.getElementById('GrandTotal').innerHTML = total - discount;
+        }
+
+        function loadItemToCartlist() {
+            Re_Genrate_LIST();
+        }
+
+        function ShowAlert(message, alart_class, duration) {
+            document.getElementById('AlertMessage').innerHTML = message;
+            $('#itemalert').show('fade');
+            $('#itemalert').toggleClass(alart_class, true)
+
+            setTimeout(function() {
+                $('#itemalert').hide('fade');
+            }, duration)
+        }
+
+        function play(audio_link) {
+            var audio = new Audio(audio_link);
+            audio.play();
+        }
+
+        Re_Genrate_LIST = function(bar = 0) {
+                if (bar != 0) {
+                    code.delete(bar);
+                    for (var l in cartlist) {
+                        if (cartlist[l]['Barcode'] == bar) {
+                            ShowAlert(`Item ${cartlist[l]['Name']} Deleted!`, 'alert-warning', 2050);
+                            // delete(cartlist[l]);
+                            cartlist = cartlist.filter(function(el) {
+                                return el != cartlist[l]
+                            })
+                            play('https://actions.google.com/sounds/v1/doors/cupboard_door.ogg');
+                        }
+                    }
+
+                }
+                document.getElementById('genratlist').innerHTML = null;
+                for (let item in cartlist.reverse()) {
+                    document.getElementById('genratlist').innerHTML += `
+                    <ul class="list-group list-group-horizontal mt-2">
+                            <li class="list-group-item list-group-item-primary" style="width:160px">
+                                <button type="button" class="itembtn" onclick='Re_Genrate_LIST(${cartlist[item]['Barcode']})' aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                    ${cartlist[item]['Name']}
+                                </button>
+                            </li>
+                            </li>   
+                            <li class="list-group-item list-group-item-secondary">
+                                <input type="number" id="qty${cartlist[item]['Barcode']}" class='border-0 bg-transparent text-center' onkeyup='QtyChanged(this.id)' value="${cartlist[item]['Quantity']}" min=0>
+                            </li>
+                            <li class="list-group-item list-group-item-warning">
+                                <input type="number" class='border-0 bg-transparent text-center' value="${cartlist[item]['Stock']}" readonly>
+                            </li>
+
+
+                            <li class="list-group-item list-group-item-danger"> 
+                                <input type="text" id="total${cartlist[item]['Barcode']}" class='border-0 bg-transparent text-center' value='${cartlist[item]['Total_pricse']}' min="0 ">
+                            </li>
+
+                            <li class="list-group-item list-group-item-info" style='width:135px'>
+                                <span class="badge badge-warning badge-pill" id="rep${cartlist[item]['Barcode']}">${cartlist[item]['Pricse']}<span/>
+                            </li>
+                    </ul>`;
+                }
+
+                CalculateTotal();
+            }
+            // Add Item
+        function AddItemByBarcode(e) {
+            if (e.keyCode == 13) {
+                var value = document.getElementById('inputbarcode').value;
+                // var cartlist = [];
+                $.ajax({
+                    url: `Barcode/${value}`,
+                    type: 'GET',
+                    encode: true,
+                    success: function(data) {
+                        if (data != 'Not found') {
+                            var item = JSON.parse(data);
+                            if (code.has(item[0]['Barcode']) == false) {
+                                code.add(item[0]['Barcode']);
+                                cartlist.push({
+                                    'Name': item[0]['Name'],
+                                    'Pricse': item[0]['Retailer_pricse'],
+                                    'Barcode': item[0]['Barcode'],
+                                    'Quantity': 1,
+                                    'Stock': item[0]['Stock'],
+                                    'Total_pricse': item[0]['Retailer_pricse'],
+                                });
+                                loadItemToCartlist(item);
+                                play('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
+                                ShowAlert('Item Added To CartList', 'alert-success', 3000);
+                            } else {
+                                ShowAlert('Item Already Exit in Cartlist', 'alert-dark', 2000);
+                                play('https://actions.google.com/sounds/v1/tools/drill_gear.ogg');
+                            }
+
+                        } else {
+                            ShowAlert('No Item found with this barCode ! Retry:', 'alert-primary', 3000);
+                            play('https://actions.google.com/sounds/v1/tools/drill_gear.ogg');
+                        }
+                    }
+                })
+            }
+        };
+        document.getElementById('inputbarcode').addEventListener('keydown', AddItemByBarcode);
+
+        function AddItemToCartlist(barcode) {
+            $.ajax({
+                    url: `/Home/Item/${barcode}`,
+                    type: 'GET',
+                    encode: true
+                })
+                .done(function(data) {
+                    if (data != 'Not found') {
+                        let item = JSON.parse(data);
+                        if (code.has(item[0]['Barcode']) != true) {
+                            console.log('Her');
+                            code.add(item[0]['Barcode']);
+                            cartlist.push({
+                                'Name': item[0]['Name'],
+                                'Pricse': item[0]['Retailer_pricse'],
+                                'Barcode': item[0]['Barcode'],
+                                'Pricse': item[0]['Retailer_pricse'],
+                                'Quantity': 1,
+                                'Total_pricse': item[0]['Retailer_pricse'],
+                            });
+                            loadItemToCartlist(item);
+                            document.getElementById('inputbarcode').value = parseInt(item[0]['Barcode']);
+                            play('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
+                            ShowAlert('Item AddedTo CartList', 'alert-sccuess', 3000);
+                        } //  else {
+                        //     ShowAlert('Item Already Exit in Cartlist', 'alert-dark', 2000);
+                        //     play('https://actions.google.com/sounds/v1/tools/drill_gear.ogg');
+                        // }
+                    }
+                })
+        }
+
+        function AddItemByProcuntName(e) {
+            if (e.keyCode == 13) {
+                var value = document.getElementById('productname').value;
+                $.ajax({
+                    url: `Productname/${value}`,
+                    type: 'GET',
+                    encode: true,
+                    success: function(data) {
+                        if (data != 'Not found') {
+                            var item = JSON.parse(data);
+                            if (code.has(item[0]['Barcode']) == false) {
+                                code.add(item[0]['Barcode']);
+                                cartlist.push({
+                                    'Name': item[0]['Name'],
+                                    'Pricse': item[0]['Retailer_pricse'],
+                                    'Barcode': item[0]['Barcode'],
+                                    'Pricse': item[0]['Retailer_pricse'],
+                                    'Quantity': 1,
+                                    'Stock': item[0]['Stock'],
+                                    'Total_pricse': item[0]['Retailer_pricse'],
+                                });
+                                loadItemToCartlist(item);
+                                play('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
+                                ShowAlert('Item Added To CartList', 'alert-success', 3000);
+                                document.getElementById('inputbarcode').value = parseInt(item[0]['Barcode']);
+                            }
+                            CalculateTotal();
+                        } else {
+                            ShowAlert('No Item found with this barCode ! Retry:', 'alert-danger', 3000);
+                            play('https://actions.google.com/sounds/v1/tools/drill_gear.ogg');
+                        }
+                    }
+                })
+            }
+        };
+        document.getElementById('productname').addEventListener('keydown', AddItemByProcuntName);
+    </script>
+
+    {%endblock%}
 </div>
+
 
 
 {% endblock %}
