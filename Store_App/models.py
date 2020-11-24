@@ -9,6 +9,8 @@ class Item(models.Model):
     retailer_pricse = models.PositiveIntegerField()
     stock = models.IntegerField()
     description = models.TextField()
+    class Meta:
+         ordering = ['name']
     def __str__(self):
         return self.name;
         
@@ -22,6 +24,8 @@ class Khaata(models.Model):
     email = models.EmailField(blank=True,null=True)
     created_at = models.DateField()
     updated = models.DateTimeField(auto_now_add=True)
+    class Meta:
+         ordering = ['created_at']
     def __str__(self):
         return self.name    
 class Bill(models.Model):
@@ -31,6 +35,8 @@ class Bill(models.Model):
     buyername = models.CharField(max_length=50)
     genrated_date = models.DateTimeField(default=d.datetime.now())
     details = models.TextField()
+    class Meta:
+         ordering = ['genrated_date']
     def __str__(self):
         return self.customer_name + str(self.id)
 
