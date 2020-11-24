@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.http import request
 from django.shortcuts import render,HttpResponse
 import json
@@ -87,7 +88,7 @@ def GenrateBill_Genrated(request):
                             return HttpResponse(f'<p style="font-size:100px">&#128556;</p> <h3>Stock me itni  {i["Name"]} nhi hain</h3>''')
                         itm.stock -=  i['Quantity']
                         itm.save()
-                Bill_Genrated = Bill(customer_name=Khaata_Name,khaata_name=is_Khaata,amount=total_amount,details=cartlist)
+                Bill_Genrated = Bill(customer_name=Khaata_Name,khaata_name=is_Khaata,amount=total_amount,details=cartlist,genrated_date=datetime.now())
                 Bill_Genrated.save()
                 # Add Credit
                 is_Khaata.credit += int(total_amount)
@@ -106,11 +107,25 @@ def GenrateBill_Genrated(request):
                 return bill_page
             elif is_Khaata.credit >= is_Khaata.credit_limit:
                 return HttpResponse('''<span style='font-size:100px;'>&#128545;</span>
-                                        <h3 style='color:red'>Bill Bharo Uddar BAND...</h3>''') 
+                                        <h3 style='color:red'>Bill Bharo Uddar BAND...</h3>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary" data-dismiss="modal">Continue</button>
+                                            <button type="button" class="btn btn-secondary" onclick="Close()">Close</button>
+                                        </div>''') 
         except ObjectDoesNotExist:
                 return HttpResponse('''<span style='font-size:100px;'>&#128530;</span>
-                            <h3>Khaat Tu sahi Likho...</h3>''')
+                            <h3>Khaat Tu sahi Likho...</h3></div>
+                            </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Continue</button>
+                                </div>''')
         except IndexError:
             return HttpResponse('''<span style='font-size:100px;'>&#128530;</span>
-                            <h3>Empity List...</h3>''')
+                            <h3>Empity List...</h3>
+                            </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" onclick="Close()">Close</button>
+                                </div>
+                            ''')
 

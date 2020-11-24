@@ -5,9 +5,9 @@
 <link rel="stylesheet" href="{% static 'Store_App/main.css' %}"> {% endblock %}
 <!-- Main Body -->
 {% block body %}
-<div class="container">
+<div class='container container-md position-relative ' style="min-height:100vh;">
     <!-- Navigation Bar  -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar navbar-expand-lg ">
         <a class="navbar-brand" href="#">
             <img src="https://seeklogo.com/images/H/hs-logo-C6FDDDC644-seeklogo.com.png" class="d-inline-block align-top Animation_logo" alt="" loading="lazy">
             <span style="font-family: 'Grenze Gotisch', cursive;font-size: 50px !important;">Cash & Carry</span>
@@ -33,8 +33,6 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-</div>
-<div class='container position-relative' style="min-height:100vh;">
     <!-- Main Row -->
     <div>
         <!-- Filter Section -->
@@ -53,7 +51,7 @@
             <input type="number" class="text-center mt-2 input" onkeyup="CalculateTotal()" id='discountpricse' min="0" value='0' placeholder="Discount Pricse">
             <input type="text" class="mt-2 text-center input" id='khaataid' placeholder="Find Khaata">
             <button type="button" class="btn btn-success mb-2" data-toggle="modal" onclick="GenrateBill_Genrated()" data-target="#exampleModal">
-                Genrate Bill_Genrated
+                Genrate Bill
                 </button>
             <label for="GrandTotal" class="text-warning m-3">Rs.<span id='GrandTotal'>0</span></label>
         </div>
@@ -87,124 +85,129 @@
                     </button>
                 </div>
                 <div class="modal-body d-flex justify-content-center align-items-center flex-column" id='LoadBillDetails'>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Continue</button>
-                    <button type="button" class="btn btn-secondary" onclick="Close()">Close</button>
+
                 </div>
             </div>
         </div>
-    </div>
-    {% block Js %}
+        {% block Js %}
 
-    <!-- Include the image-diff library -->
-    <script src="https://cdn.rawgit.com/serratus/quaggaJS/0420d5e0/dist/quagga.min.js "></script>
-    <!-- Qr / Barcode Scaneer-->
-    <!-- Qr Scaner -->
-    <script>
-        var code = new Set();
-        var cartlist = [];
+        <!-- Include the image-diff library -->
+        <script src="https://cdn.rawgit.com/serratus/quaggaJS/0420d5e0/dist/quagga.min.js "></script>
+        <!-- Qr / Barcode Scaneer-->
+        <!-- Qr Scaner -->
+        <script>
+            var code = new Set();
+            var cartlist = [];
 
-        function Close() {
-            location.reload();
-        }
-
-        function GenrateBill_Genrated() {
-            // Get Bill_Genrated Cridentials from form
-            let khaata_id = document.getElementById('khaataid').value;
-            let total = document.getElementById('GrandTotal').innerHTML;
-            let discount = document.getElementById('discountpricse').value;
-            if (cartlist.length <= 0) {
-                document.getElementById('LoadBillDetails').innerHTML =
-                    `<span style='font-size:100px;'>&#128530;</span>
-                            <h3>Kiss ko add Karun...</h3>`;
-                return
+            function Close() {
+                location.reload();
             }
-            if (khaata_id == '') {
-                document.getElementById('LoadBillDetails').innerHTML =
-                    `<span style='font-size:100px;'>&#128530;</span>
-                            <h3>Kiss ke Khaata Dalun...</h3>`;
-                return
-            }
-            let send_cart = {
-                    'CartLists': JSON.stringify(cartlist),
-                    'khaata': khaata_id,
-                    'total_amount': total,
-                    'discount': discount,
-                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+
+            function GenrateBill_Genrated() {
+                // Get Bill_Genrated Cridentials from form
+                let khaata_id = document.getElementById('khaataid').value;
+                let total = document.getElementById('GrandTotal').innerHTML;
+                let discount = document.getElementById('discountpricse').value;
+                if (cartlist.length <= 0) {
+                    document.getElementById('LoadBillDetails').innerHTML =
+                        `<span style='font-size:100px;'>&#128530;</span>
+                            <h3>Kiss ko add Karun...</h3>
+                        </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Continue</button> 
+                            </div>`;
+                    return
                 }
-                // Khata Genration Backend
-            $.ajax({
-                type: 'POST',
-                url: 'GenrateBill_Genrated/',
-                data: send_cart,
-                encode: true,
-            }).done(function(data) {
-                document.getElementById('LoadBillDetails').innerHTML = data;
-            })
-
-        }
-
-        function QtyChanged(id) {
-            let pdt = id.slice(3)
-            let value = document.getElementById('qty' + pdt).value;
-            for (let c in cartlist) {
-                if (cartlist[c]['Barcode'] == pdt) {
-                    let total = value * cartlist[c]['Pricse'];
-                    cartlist[c]['Total_pricse'] = total;
-                    cartlist[c]['Quantity'] = parseInt(value);
-                    document.getElementById('total' + pdt).value = total;
+                if (khaata_id == '') {
+                    document.getElementById('LoadBillDetails').innerHTML =
+                        `<span style='font-size:100px;'>&#128530;</span>
+                            <h3>Kiss ke Khaata Dalun...</h3>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Continue</button>
+                            
+                        </div>`;
+                    return
                 }
-            }
-            CalculateTotal();
-        }
-
-        function CalculateTotal() {
-            let total = 0;
-            for (var c in cartlist) {
-                total += cartlist[c]['Pricse'] * cartlist[c]['Quantity'];
-            }
-            let discount = document.getElementById('discountpricse').value;
-            document.getElementById('GrandTotal').innerHTML = total - discount;
-        }
-
-        function loadItemToCartlist() {
-            Re_Genrate_LIST();
-        }
-
-        function ShowAlert(message, alart_class, duration) {
-            document.getElementById('AlertMessage').innerHTML = message;
-            $('#itemalert').show('fade');
-            $('#itemalert').toggleClass(alart_class, true)
-
-            setTimeout(function() {
-                $('#itemalert').hide('fade');
-            }, duration)
-        }
-
-        function play(audio_link) {
-            var audio = new Audio(audio_link);
-            audio.play();
-        }
-
-        Re_Genrate_LIST = function(bar = 0) {
-                if (bar != 0) {
-                    code.delete(bar);
-                    for (var l in cartlist) {
-                        if (cartlist[l]['Barcode'] == bar) {
-                            ShowAlert(`Item ${cartlist[l]['Name']} Deleted!`, 'alert-warning', 2050);
-                            // delete(cartlist[l]);
-                            cartlist = cartlist.filter(function(el) {
-                                return el != cartlist[l]
-                            })
-                            play('https://actions.google.com/sounds/v1/doors/cupboard_door.ogg');
-                        }
+                let send_cart = {
+                        'CartLists': JSON.stringify(cartlist),
+                        'khaata': khaata_id,
+                        'total_amount': total,
+                        'discount': discount,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
                     }
+                    // Khata Genration Backend
+                $.ajax({
+                    type: 'POST',
+                    url: 'GenrateBill_Genrated/',
+                    data: send_cart,
+                    encode: true,
+                }).done(function(data) {
+                    document.getElementById('LoadBillDetails').innerHTML = data;
+                })
 
+            }
+
+            function QtyChanged(id) {
+                let pdt = id.slice(3)
+                let value = document.getElementById('qty' + pdt).value;
+                for (let c in cartlist) {
+                    if (cartlist[c]['Barcode'] == pdt) {
+                        let total = value * cartlist[c]['Pricse'];
+                        cartlist[c]['Total_pricse'] = total;
+                        cartlist[c]['Quantity'] = parseInt(value);
+                        document.getElementById('total' + pdt).value = total;
+                    }
                 }
-                document.getElementById('genratlist').innerHTML = null;
-                for (let item in cartlist.reverse()) {
-                    document.getElementById('genratlist').innerHTML += `
+                CalculateTotal();
+            }
+
+            function CalculateTotal() {
+                let total = 0;
+                for (var c in cartlist) {
+                    total += cartlist[c]['Pricse'] * cartlist[c]['Quantity'];
+                }
+                let discount = document.getElementById('discountpricse').value;
+                document.getElementById('GrandTotal').innerHTML = total - discount;
+            }
+
+            function loadItemToCartlist() {
+                Re_Genrate_LIST();
+            }
+
+            function ShowAlert(message, alart_class, duration) {
+                document.getElementById('AlertMessage').innerHTML = message;
+                $('#itemalert').show('fade');
+                $('#itemalert').toggleClass(alart_class, true)
+
+                setTimeout(function() {
+                    $('#itemalert').hide('fade');
+                }, duration)
+            }
+
+            function play(audio_link) {
+                var audio = new Audio(audio_link);
+                audio.play();
+            }
+
+            Re_Genrate_LIST = function(bar = 0) {
+                    if (bar != 0) {
+                        code.delete(bar);
+                        for (var l in cartlist) {
+                            if (cartlist[l]['Barcode'] == bar) {
+                                ShowAlert(`Item ${cartlist[l]['Name']} Deleted!`, 'alert-warning', 2050);
+                                // delete(cartlist[l]);
+                                cartlist = cartlist.filter(function(el) {
+                                    return el != cartlist[l]
+                                })
+                                play('https://actions.google.com/sounds/v1/doors/cupboard_door.ogg');
+                            }
+                        }
+
+                    }
+                    document.getElementById('genratlist').innerHTML = null;
+                    for (let item in cartlist.reverse()) {
+                        document.getElementById('genratlist').innerHTML += `
                     <ul class="list-group list-group-horizontal mt-2">
                             <li class="list-group-item list-group-item-primary" style="width:160px">
                                 <button type="button" class="itembtn" onclick='Re_Genrate_LIST(${cartlist[item]['Barcode']})' aria-label="Close">
@@ -229,93 +232,61 @@
                                 <span class="badge badge-warning badge-pill" id="rep${cartlist[item]['Barcode']}">${cartlist[item]['Pricse']}<span/>
                             </li>
                     </ul>`;
-                }
+                    }
 
-                CalculateTotal();
-            }
-            // Add Item
-        function AddItemByBarcode(e) {
-            if (e.keyCode == 13) {
-                var value = document.getElementById('inputbarcode').value;
-                // var cartlist = [];
-                $.ajax({
-                    url: `Barcode/${value}`,
-                    type: 'GET',
-                    encode: true,
-                    success: function(data) {
-                        if (data != 'Not found') {
-                            var item = JSON.parse(data);
-                            if (code.has(item[0]['Barcode']) == false) {
-                                code.add(item[0]['Barcode']);
-                                cartlist.push({
-                                    'Name': item[0]['Name'],
-                                    'Pricse': item[0]['Retailer_pricse'],
-                                    'Barcode': item[0]['Barcode'],
-                                    'Quantity': 1,
-                                    'Stock': item[0]['Stock'],
-                                    'Total_pricse': item[0]['Retailer_pricse'],
-                                });
-                                loadItemToCartlist(item);
-                                play('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
-                                ShowAlert('Item Added To CartList', 'alert-success', 3000);
+                    CalculateTotal();
+                }
+                // Add Item
+            function AddItemByBarcode(e) {
+                if (e.keyCode == 13) {
+                    var value = document.getElementById('inputbarcode').value;
+                    // var cartlist = [];
+                    $.ajax({
+                        url: `Barcode/${value}`,
+                        type: 'GET',
+                        encode: true,
+                        success: function(data) {
+                            if (data != 'Not found') {
+                                var item = JSON.parse(data);
+                                if (code.has(item[0]['Barcode']) == false) {
+                                    code.add(item[0]['Barcode']);
+                                    cartlist.push({
+                                        'Name': item[0]['Name'],
+                                        'Pricse': item[0]['Retailer_pricse'],
+                                        'Barcode': item[0]['Barcode'],
+                                        'Quantity': 1,
+                                        'Stock': item[0]['Stock'],
+                                        'Total_pricse': item[0]['Retailer_pricse'],
+                                    });
+                                    loadItemToCartlist(item);
+                                    play('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
+                                    ShowAlert('Item Added To CartList', 'alert-success', 3000);
+                                } else {
+                                    ShowAlert('Item Already Exit in Cartlist', 'alert-dark', 2000);
+                                    play('https://actions.google.com/sounds/v1/tools/drill_gear.ogg');
+                                }
+
                             } else {
-                                ShowAlert('Item Already Exit in Cartlist', 'alert-dark', 2000);
+                                ShowAlert('No Item found with this barCode ! Retry:', 'alert-primary', 3000);
                                 play('https://actions.google.com/sounds/v1/tools/drill_gear.ogg');
                             }
-
-                        } else {
-                            ShowAlert('No Item found with this barCode ! Retry:', 'alert-primary', 3000);
-                            play('https://actions.google.com/sounds/v1/tools/drill_gear.ogg');
                         }
-                    }
-                })
-            }
-        };
-        document.getElementById('inputbarcode').addEventListener('keydown', AddItemByBarcode);
+                    })
+                }
+            };
+            document.getElementById('inputbarcode').addEventListener('keydown', AddItemByBarcode);
 
-        function AddItemToCartlist(barcode) {
-            $.ajax({
-                    url: `/Home/Item/${barcode}`,
-                    type: 'GET',
-                    encode: true
-                })
-                .done(function(data) {
-                    if (data != 'Not found') {
-                        let item = JSON.parse(data);
-                        if (code.has(item[0]['Barcode']) != true) {
-                            console.log('Her');
-                            code.add(item[0]['Barcode']);
-                            cartlist.push({
-                                'Name': item[0]['Name'],
-                                'Pricse': item[0]['Retailer_pricse'],
-                                'Barcode': item[0]['Barcode'],
-                                'Pricse': item[0]['Retailer_pricse'],
-                                'Quantity': 1,
-                                'Total_pricse': item[0]['Retailer_pricse'],
-                            });
-                            loadItemToCartlist(item);
-                            document.getElementById('inputbarcode').value = parseInt(item[0]['Barcode']);
-                            play('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
-                            ShowAlert('Item AddedTo CartList', 'alert-sccuess', 3000);
-                        } //  else {
-                        //     ShowAlert('Item Already Exit in Cartlist', 'alert-dark', 2000);
-                        //     play('https://actions.google.com/sounds/v1/tools/drill_gear.ogg');
-                        // }
-                    }
-                })
-        }
-
-        function AddItemByProcuntName(e) {
-            if (e.keyCode == 13) {
-                var value = document.getElementById('productname').value;
+            function AddItemToCartlist(barcode) {
                 $.ajax({
-                    url: `Productname/${value}`,
-                    type: 'GET',
-                    encode: true,
-                    success: function(data) {
+                        url: `/Home/Item/${barcode}`,
+                        type: 'GET',
+                        encode: true
+                    })
+                    .done(function(data) {
                         if (data != 'Not found') {
-                            var item = JSON.parse(data);
-                            if (code.has(item[0]['Barcode']) == false) {
+                            let item = JSON.parse(data);
+                            if (code.has(item[0]['Barcode']) != true) {
+                                console.log('Her');
                                 code.add(item[0]['Barcode']);
                                 cartlist.push({
                                     'Name': item[0]['Name'],
@@ -323,29 +294,61 @@
                                     'Barcode': item[0]['Barcode'],
                                     'Pricse': item[0]['Retailer_pricse'],
                                     'Quantity': 1,
-                                    'Stock': item[0]['Stock'],
                                     'Total_pricse': item[0]['Retailer_pricse'],
                                 });
                                 loadItemToCartlist(item);
-                                play('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
-                                ShowAlert('Item Added To CartList', 'alert-success', 3000);
                                 document.getElementById('inputbarcode').value = parseInt(item[0]['Barcode']);
-                            }
-                            CalculateTotal();
-                        } else {
-                            ShowAlert('No Item found with this barCode ! Retry:', 'alert-danger', 3000);
-                            play('https://actions.google.com/sounds/v1/tools/drill_gear.ogg');
+                                play('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
+                                ShowAlert('Item AddedTo CartList', 'alert-sccuess', 3000);
+                            } //  else {
+                            //     ShowAlert('Item Already Exit in Cartlist', 'alert-dark', 2000);
+                            //     play('https://actions.google.com/sounds/v1/tools/drill_gear.ogg');
+                            // }
                         }
-                    }
-                })
+                    })
             }
-        };
-        document.getElementById('productname').addEventListener('keydown', AddItemByProcuntName);
-    </script>
 
-    {%endblock%}
-</div>
+            function AddItemByProcuntName(e) {
+                if (e.keyCode == 13) {
+                    var value = document.getElementById('productname').value;
+                    $.ajax({
+                        url: `Productname/${value}`,
+                        type: 'GET',
+                        encode: true,
+                        success: function(data) {
+                            if (data != 'Not found') {
+                                var item = JSON.parse(data);
+                                if (code.has(item[0]['Barcode']) == false) {
+                                    code.add(item[0]['Barcode']);
+                                    cartlist.push({
+                                        'Name': item[0]['Name'],
+                                        'Pricse': item[0]['Retailer_pricse'],
+                                        'Barcode': item[0]['Barcode'],
+                                        'Pricse': item[0]['Retailer_pricse'],
+                                        'Quantity': 1,
+                                        'Stock': item[0]['Stock'],
+                                        'Total_pricse': item[0]['Retailer_pricse'],
+                                    });
+                                    loadItemToCartlist(item);
+                                    play('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
+                                    ShowAlert('Item Added To CartList', 'alert-success', 3000);
+                                    document.getElementById('inputbarcode').value = parseInt(item[0]['Barcode']);
+                                }
+                                CalculateTotal();
+                            } else {
+                                ShowAlert('No Item found with this barCode ! Retry:', 'alert-danger', 3000);
+                                play('https://actions.google.com/sounds/v1/tools/drill_gear.ogg');
+                            }
+                        }
+                    })
+                }
+            };
+            document.getElementById('productname').addEventListener('keydown', AddItemByProcuntName);
+        </script>
+
+        {%endblock%}
+    </div>
 
 
 
-{% endblock %}
+    {% endblock %}

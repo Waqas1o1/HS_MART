@@ -69,6 +69,12 @@
     .table>tbody>tr>.thick-line {
         border-top: 2px solid;
     }
+    
+    @media only screen and (max-width: 680px) {
+        body .container {
+            width: 300vw;
+        }
+    }
     /* Loader */
     
     @keyframes animation {
