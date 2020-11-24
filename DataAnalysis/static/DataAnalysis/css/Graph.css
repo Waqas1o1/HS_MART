@@ -4,7 +4,7 @@ body {
     display: block;
     background: #e8cbc0;
     background: -webkit-linear-gradient(to right, #e8cbc0, #636fa4);
-    background: linear-gradient(to bottom, #3400f1, #12004d);
+    background: linear-gradient(to bottom, #d1d1d1, #000000);
     min-height: 100vh;
 }
 

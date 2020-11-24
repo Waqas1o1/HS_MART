@@ -43,7 +43,13 @@
     <div class="row d-flex justify-content-center flex-colum mt-5">
         <div class='graph col-12'>
             <h3 class=" text-light" id='currentyear'>2020</h3>
+            <span class="fa-1x text-muted">TOTAL ANALYSIS</span>
             <canvas id="pie_chart"></canvas>
+        </div>
+        <div class='graph col-12 mt-5'>
+            <h3 class=" text-light">Details</h3>
+            <span class="fa-1x text-muted">PROFIT ANALYSIS</span>
+            <canvas id="pie_chart2"></canvas>
         </div>
     </div>
 </div>
@@ -80,19 +86,26 @@
                     months.push(k)
                     profit.push(data[0][k])
                 }
-                Genrate_Chart(months, profit);
+                Genrate_Chart(months, profit, 'pie_chart');
+                var months = []
+                var profit = []
+                for (k in data[1]) {
+                    months.push(k)
+                    profit.push(data[1][k])
+                }
+                Genrate_Chart(months, profit, 'pie_chart2');
             }
         })
     }
     // Chart Genration
-    function Genrate_Chart(m, p) {
-        var ctx = document.getElementById('pie_chart');
+    function Genrate_Chart(m, p, place) {
+        var ctx = document.getElementById(place);
         var myChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: m,
                 datasets: [{
-                    label: 'Profit',
+                    label: 'TOTAL',
                     data: p,
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',

@@ -77,18 +77,20 @@ def GenrateBill_Genrated(request):
                 if  is_Khaata.credit >= is_Khaata.credit_warning:
                     waring = '<p>&#128540;</p> <strong>Warning ! Passe De DO</strong>' 
                    #Deduct Item From Stock
+                p = 0
                 for i in cart:
                     if i  is not None:
                         itm = Item.objects.get(name__exact=i['Name'])
                         if itm.stock <= 0:
                             return HttpResponse(f'<p style="font-size:100px">&#128529;</p> <h3>Mukk Gye {i["Name"]} </h3>''')
-                        rmg_stock = itm.stock - i['Quantity'] 
+                        rmg_stock = itm.stock - i['Quantity']
+                        p += (itm.retailer_pricse - itm.wholesale_pricse) * i['Quantity'] 
                         if  rmg_stock < 0:
                             print(f'{itm.stock} , {rmg_stock}')
                             return HttpResponse(f'<p style="font-size:100px">&#128556;</p> <h3>Stock me itni  {i["Name"]} nhi hain</h3>''')
                         itm.stock -=  i['Quantity']
                         itm.save()
-                Bill_Genrated = Bill(customer_name=Khaata_Name,khaata_name=is_Khaata,amount=total_amount,details=cartlist,genrated_date=datetime.now())
+                Bill_Genrated = Bill(customer_name=Khaata_Name,khaata_name=is_Khaata,amount=total_amount,details=cartlist,genrated_date=datetime.now(),profit=p)
                 Bill_Genrated.save()
                 # Add Credit
                 is_Khaata.credit += int(total_amount)

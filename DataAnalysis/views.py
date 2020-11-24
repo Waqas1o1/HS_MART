@@ -60,13 +60,20 @@ def Graph_Analysis(request):
 def Get_Graph(request,year):
     if request.is_ajax():
         print(year)
-        bill = Bill.objects.filter(genrated_date__year=year).values('amount','genrated_date')
+        bill = Bill.objects.filter(genrated_date__year=year).values('amount','profit','genrated_date')
         ls = []
-        data = DefaultDict(int)
+        a = DefaultDict(int)
+        p = DefaultDict(int)
         # date = l['genrated_date'].strftime('%d')
         for l in bill:
-            month = l['genrated_date'].strftime('%b') 
-            data[month] += int(l['amount'])
-        ls.append(data)
+            month = l['genrated_date'].strftime('%b')
+            a[month] += int(l['amount']) 
+        
+        for l in bill:
+            month = l['genrated_date'].strftime('%b')
+            p[month] += int(l['profit']) 
+        
+        ls.append(a)
+        ls.append(p)
 
         return JsonResponse(ls,safe=False)

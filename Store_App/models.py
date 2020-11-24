@@ -25,20 +25,22 @@ class Khaata(models.Model):
     created_at = models.DateField()
     updated = models.DateTimeField(auto_now_add=True)
     class Meta:
-         ordering = ['created_at']
+         ordering = ['name']
     def __str__(self):
         return self.name    
 class Bill(models.Model):
     customer_name = models.CharField(max_length=100)
     amount = models.FloatField()
+    profit = models.FloatField(default=0)
     khaata_name = models.ForeignKey(Khaata,on_delete=models.CASCADE)
     buyername = models.CharField(max_length=50)
     genrated_date = models.DateTimeField(default=d.datetime.now())
     details = models.TextField()
     class Meta:
-         ordering = ['genrated_date']
+         ordering = ['-genrated_date']
     def __str__(self):
         return self.customer_name + str(self.id)
+    
 
 
     
