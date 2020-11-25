@@ -4,7 +4,7 @@ import datetime
 from Store_App.models import Khaata
 # Create your models here.
 class Transaction(models.Model):
-    Transaction = models.IntegerField(default='Payment Received',blank=True)
+    Transaction = models.IntegerField(default=0,blank=True)
     Transaction_Message = models.TextField(null=True,max_length=500) 
     Credit_Before_Transaction = models.IntegerField(null=True,blank=True)
     Credit_After_Transaction = models.IntegerField(null=True,blank=True)

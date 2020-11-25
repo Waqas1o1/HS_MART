@@ -38,7 +38,7 @@ def AddItemBarcode(request,barcode):
     return HttpResponse('Not found');            
 def AddItemByPdtName(request,pdtname):
     if request.is_ajax():
-        products = Item.objects.filter(name__exact=pdtname)
+        products = Item.objects.filter(name__exact=pdtname.upper())
         if len(products) >0 :
             send_pdt = []
             for p in products:
@@ -55,7 +55,7 @@ def autosuggest(request):
     return HttpResponse(json.dumps(send_pdt,default=str))
 
 def Find_Khaata(request):
-    khata_name = request.GET.get('term',None)
+    khata_name = request.GET.get('term',None).upper()
     if khata_name is not None:
         khaaty = Khaata.objects.filter(name__icontains=khata_name)
         send_pdt = []
@@ -66,7 +66,7 @@ def Find_Khaata(request):
 def GenrateBill_Genrated(request):
     if request.is_ajax():
         cartlist = request.POST.get('CartLists')
-        Khaata_Name = request.POST.get('khaata')
+        Khaata_Name = request.POST.get('khaata').upper()
         total_amount = request.POST.get('total_amount')
         discount = request.POST.get('discount')
         try:

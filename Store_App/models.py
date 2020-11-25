@@ -13,6 +13,9 @@ class Item(models.Model):
          ordering = ['name']
     def __str__(self):
         return self.name;
+    def save(self,*args,**kwargs):
+        self.name = self.name.upper()  
+        super().save(*args, **kwargs) 
         
 class Khaata(models.Model):
     name = models.CharField(max_length=100,unique=True)
@@ -27,7 +30,10 @@ class Khaata(models.Model):
     class Meta:
          ordering = ['name']
     def __str__(self):
-        return self.name    
+        return self.name 
+    def save(self,*args,**kwargs):
+        self.name = self.name.upper()  
+        super().save(*args, **kwargs) 
 class Bill(models.Model):
     customer_name = models.CharField(max_length=100)
     amount = models.FloatField()

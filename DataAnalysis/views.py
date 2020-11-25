@@ -15,7 +15,7 @@ def Bill_Analysis(request):
         if request.is_ajax():
             date_from = request.POST.get('date_from',None)
             date_to = request.POST.get('date_to',None)
-            khaata = request.POST.get('khaata',None)
+            khaata = request.POST.get('khaata',None).upper()
             bill = ''
             khaata = models.Khaata.objects.filter(name=khaata)
             if len(khaata) > 0 and date_from != '':
