@@ -3,6 +3,7 @@ from Store_App.models import Bill
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render
 from Store_App import models
+from . import models as m
 from Store_App import views as v
 from datetime import datetime,timedelta
 from django.db.models import Q
@@ -77,3 +78,10 @@ def Get_Graph(request,year):
         ls.append(p)
 
         return JsonResponse(ls,safe=False)
+
+def Transaction(request):
+    transactions = m.Transaction.objects.all().order_by('Transaction_Date')
+    paginator = Paginator(transactions,30)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request,'DataAnalysis/Transaction_Analysis.html',{'Transactions':page_obj})

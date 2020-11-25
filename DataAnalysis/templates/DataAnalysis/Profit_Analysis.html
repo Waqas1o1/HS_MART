@@ -1,6 +1,8 @@
 {% extends 'Basic.html' %} {% load static %}
 <!-- Title  -->
-{% block title %}Profit Graph{% endblock %}
+{% block title %} 
+<title>Profit Graph</title>
+{% endblock %}
 <!--Custom Css -->
 {% block css %}
 <link rel="stylesheet" href="{% static 'DataAnalysis/css/Graph.css' %}"> {% endblock %}
@@ -20,7 +22,8 @@
             </p>
             <p class="d-flex justify-content-between">
                 <a href="/Home" class="text-light" style="font-weight: 500;">Home</a> |
-                <a href="/Analysis/" class="text-light" style="font-weight: 500;">Bill Analysis</a>
+                <a href="/Analysis/" class="text-light" style="font-weight: 500;">Bill Analysis</a> |
+                <a href="/Analysis/Transaction/" class="text-light" style="font-weight: 500;">Transaction Analysis</a>
             </p>
         </div>
     </div>

@@ -1,0 +1,56 @@
+{% extends 'Basic.html' %} {% block title %}
+<title>
+    Transactions Analysis
+</title>
+{% endblock %} {% block body %}
+<div class="container">
+    <div class="row text-center mt-5">
+        <div class="col-lg-8 mx-auto text-dark">
+            <img src="https://seeklogo.com/images/H/hs-logo-C6FDDDC644-seeklogo.com.png" class='bg-transparent border-0 img-fluid' alt="">
+            <h1 class="display-4">Profit Analysis</h1>
+            <p class="lead mb-0">Check your Profit details according to months in this section.</p>
+            <p class="lead">Snippet by
+                <a href="/" class="text-dark">
+                    <u>Muhammad Waqas</u>
+                </a>
+            </p>
+            <p class="d-flex justify-content-between">
+                <a href="/Home/" class="text-dark" style="font-weight: 500;">Home</a> |
+                <a href="/Analysis/ProfitGraph/" class="text-dark" style="font-weight: 500;">Profit</a> |
+                <a href="/Analysis/" class="text-dark" style="font-weight: 500;">Bill Analysis</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- ======= Hero Section ======= -->
+    <section id="hero" class="d-flex align-items-center mb-5">
+        <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
+            <div class='row line'>
+                {% for t in Transactions %}
+                <div class="col-md-6 col-lg-3 mt-5">
+                    <div class="text-center font-weight-bold">
+                        Hs Mart
+                        <div class="text-muted" style="margin-top: -5px;">0321 7073731</div>
+                    </div>
+                    <div class="text-center fa-1x text-muted w-100">Payment Received</div>
+                    <div class="text-center text-danger fa-2x">Rs.{{t.Transaction}}</div>
+                    <div class="text-center text-muted">{{t.Transaction_Date|date}}</div>
+                    <div class="text-center text-muted">Credit Before Rs.{{t.Credit_Before_Transaction}}</div>
+                    <div class="text-center text-muted">Credit After Rs.{{t.Credit_After_Transaction}}</div>
+                    <div class="input-group mt-2">
+                        <div class=" input-group-prepend justify-content-center ">
+                            <span class="input-group-text">
+                                    <i class="fas fa-user "></i>
+                                </span>
+                        </div>
+                        <input type="text" class="form-control input-group-text text-center font-weight-bolder" value="{{t.Khaata}}" aria-label="Username " aria-describedby="basic-addon1 ">
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <!-- End Hero -->
+
+</div>
+{% endblock %}
