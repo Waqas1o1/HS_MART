@@ -1,5 +1,5 @@
-from typing import DefaultDict, Set
-from Store_App.models import Bill
+from typing import DefaultDict
+from Store_App.models import Bill, Item
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render
 from Store_App import models
@@ -40,7 +40,10 @@ def Bill_Analysis(request):
                 sub_total = 0
                 for i in detail:
                     sub_total += i['Pricse']
-                send_dict.append({"Name":b.customer_name,'Total_Amount':b.amount,'Khaata_name':str(b.khaata_name),'genrated_date':b.genrated_date,'details':detail,'SubTotal':sub_total})
+                send_dict.append({"Name":b.customer_name,'Total_Amount':b.amount,'Khaata_name':str(b.khaata_name),
+                                 'genrated_date':b.genrated_date,'details':detail,'SubTotal':sub_total,
+                                 'cash_deposit':b.cash_deposit,'cash_return':b.cash_return})
+                print(send_dict)
             d = json.dumps(send_dict,default=str)
             return HttpResponse(d)
     bill = models.Bill.objects.all().order_by('genrated_date__date')[:50]
@@ -50,7 +53,9 @@ def Bill_Analysis(request):
         sub_total = 0
         for i in detail:
             sub_total += i['Pricse']
-        send_list.append({"Name":b.customer_name,'Total_Amount':b.amount,'Khaata_name':b.khaata_name,'genrated_date':b.genrated_date,'details':detail,'SubTotal':sub_total})
+        send_list.append({"Name":b.customer_name,'Total_Amount':b.amount,'Khaata_name':b.khaata_name,
+        'genrated_date':b.genrated_date,'details':detail,'SubTotal':sub_total,
+         'cash_deposit':b.cash_deposit,'cash_return':b.cash_return})
     paginator = Paginator(send_list,10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -85,3 +90,24 @@ def Transaction(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request,'DataAnalysis/Transaction_Analysis.html',{'Transactions':page_obj})
+
+
+def Stock(request):
+    if request.method == 'GET':
+        items = Item.objects.all()
+    else :
+        item = request.POST.get('Item') 
+        min = request.POST.get('min') 
+        max = request.POST.get('max')
+        if min and max:
+            items = Item.objects.filter(Q(stock__gte=min) & Q(stock__lte=max))
+            print(items)
+        elif item:
+            items = Item.objects.filter(name__icontains=item).values('name','stock')
+        else:
+            items = Item.objects.all()
+        # return render(request,'DataAnalysis/stock.html',{'Items':page_obj})
+    paginator = Paginator(items,50)
+    page_number = request.POST.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request,'DataAnalysis/stock.html',{'Items':page_obj})

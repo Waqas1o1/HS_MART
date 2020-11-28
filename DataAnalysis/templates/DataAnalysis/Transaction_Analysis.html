@@ -18,6 +18,7 @@
                 <a href="/Home/" class="text-dark" style="font-weight: 500;">Home</a> |
                 <a href="/Analysis/ProfitGraph/" class="text-dark" style="font-weight: 500;">Profit</a> |
                 <a href="/Analysis/" class="text-dark" style="font-weight: 500;">Bill Analysis</a>
+                <a href="/Analysis/Stock" class="text-dark" style="font-weight: 500;">Stock Analysis</a>
             </p>
         </div>
     </div>
@@ -50,7 +51,24 @@
             </div>
         </div>
     </section>
+    
     <!-- End Hero -->
-
 </div>
+  <footer>
+        <nav aria-label="Page navigation" class="d-flex justify-content-center" id='pagination'>
+            <ul class="pagination justify-content-end">
+                {% if Transactions.has_previous %}
+                <li class="page-item">
+                    <a class="page-link text-monospace" href="?page={{ Transactions.previous_page_number }}">&laquo; Previous</a>
+                </li>
+                {% endif %}
+                <li class="page-item"><a class="page-link text-monospace">Page {{ Transactions.number }} of {{ Transactions.paginator.num_pages }}.</a></li>
+                {% if Transactions.has_next %}
+                <li class="page-item">
+                    <a class="page-link text-monospace" href="?page={{ Transactions.next_page_number }}">Next &raquo;</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </footer>
 {% endblock %}

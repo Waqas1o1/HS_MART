@@ -40,6 +40,8 @@ class Bill(models.Model):
     profit = models.FloatField(default=0)
     khaata_name = models.ForeignKey(Khaata,on_delete=models.CASCADE)
     buyername = models.CharField(max_length=50)
+    cash_deposit = models.CharField(max_length=50,null=True,blank=True)
+    cash_return = models.CharField(max_length=50,null=True,blank=True)
     genrated_date = models.DateTimeField(default=d.datetime.now())
     details = models.TextField()
     class Meta:

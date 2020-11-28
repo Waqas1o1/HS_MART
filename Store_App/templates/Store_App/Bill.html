@@ -95,6 +95,12 @@
     						</tbody>
     					</table>
     				</div>
+						{% if cash_deposit  != '0'%}
+								<div class='d-flex justify-content-around text-danger font-weight-bolder'>
+								<div>Cash Recived: {{cash_deposit}}</div>
+								<div>Cash Return: {{cash_return}}</div>
+								</div>
+						{% endif %}
     			</div>
     		</div>
     	</div>

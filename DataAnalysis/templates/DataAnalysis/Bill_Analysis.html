@@ -17,6 +17,7 @@
              <p class="d-flex justify-content-between">
                 <a href="/Home" class="text-light" style="font-weight: 500;">Home</a> |
                 <a href="/Analysis/Transaction/" class="text-light" style="font-weight: 500;">Transaction Analysis</a> |
+                <a href="/Analysis/Stock" class="text-light" style="font-weight: 500;">Stock Analysis</a> |
                 <a href="/Analysis/ProfitGraph/" class="text-light" style="font-weight: 500;">Profit Analysis</a>
             </p>
         </div>
@@ -106,6 +107,15 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <p class="text-muted">Grand Total :</p>
                                 <p class="text-success">{{bill.Total_Amount}}</p>
+                            </div>
+                          
+                            <div class="d-flex justify-content-between align-items-center">
+                                <p class="text-muted">Cash Deposited :</p>
+                                <p class="text-success">{{bill.cash_deposit}}</p>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <p class="text-muted">Cash Return :</p>
+                                <p class="text-success">{{bill.cash_return}}</p>
                             </div>
                         </p>
                     </div>

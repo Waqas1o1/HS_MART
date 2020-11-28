@@ -6,5 +6,6 @@ urlpatterns = [
     path('GetGraph/<str:year>',views.Get_Graph),
     path('ProfitGraph/',views.Graph_Analysis,name='GraphAnalysis'),
     path('Transaction/',views.Transaction,name='Trnsaction'),
+    path('Stock/',views.Stock,name='Trnsaction'),
     path('FindKhaata/',v.Find_Khaata,name='Findkhaata')
 ]

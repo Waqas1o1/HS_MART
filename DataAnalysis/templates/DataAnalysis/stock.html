@@ -1,0 +1,99 @@
+{% extends 'Basic.html' %} {% block title %}
+{% load static %}
+<title>Stocks Avalibility</title>
+
+{% endblock %} {% block body %}
+<!-- For demo purpose -->
+<div class="container mt-5">
+    <div class="row text-center text-dark">
+        <div class="col-lg-8 mx-auto">
+            <img src="https://seeklogo.com/images/H/hs-logo-C6FDDDC644-seeklogo.com.png" class='bg-transparent border-0 img-fluid' alt="">
+            <h1 class="display-4">Bill Analysis</h1>
+            <p class="lead mb-0">Check your Bill details in this section.</p>
+            <p class="lead">Snippet by
+                <a href="/" class="text-info">
+                    <u>Muh  ammad Waqas</u>
+                </a>
+            </p>
+            <p class="d-flex justify-content-between">
+                <a href="/Home" class="text-dark" style="font-weight: 500;">Home</a> |
+                <a href="/Analysis/Transaction/" class="text-dark" style="font-weight: 500;">Transaction Analysis</a> |
+                <a href="/Analysis/" class="text-dark" style="font-weight: 500;">Bills Analysis</a>
+                <a href="/Analysis/ProfitGraph/" class="text-dark" style="font-weight: 500;">Profit Analysis</a>
+            </p>
+        </div>
+    </div>
+</div>
+<!-- End -->
+<!-- Stock Details Page -->
+<div class="container-md">
+    <div class="d-flex justify-content-center py-3">
+        <form class="form-inline d-flex justify-content-center" action="/Analysis/Stock/" method="POST">
+            {% csrf_token %}
+            <div class="form-group mb-2">
+                <label for="productname" class="sr-only">Email</label>
+                <input type="text" name='Item' class="form-control-plaintext text-center" id="productname" placeholder="Product Name:" value="">
+            </div>
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="mininput" min=0 max=5000 class="sr-only">Password</label>
+                <input type="number" name='min' class="form-control" id="mininput" placeholder="Min">
+            </div>
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="maxinput" min=0 max=5000 class="sr-only">Max_vlaue</label>
+                <input type="number" name='max' class="form-control" id="maxinput" placeholder="Max">
+            </div>
+            <button type="submit" class="btn btn-success mb-2">Confirm identity</button>
+        </form>
+    </div>
+    <button type="button" onclick="Print_List()" class="btn btn-primary mb-2">Print Lits</button>
+
+    <div class='d-flex justify-content-center' id='printlist'>
+        <ul class="list-group d-flex justify-content-center w-100">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span class="text-info">No.</span> Product Name
+                <span class="badge badge-primary badge-pill"></span>
+            </li>
+            {% for item in Items %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span class="text-info">{{forloop.counter}}</span> {{item.name}}
+                <span class="badge badge-primary badge-pill">{{item.stock}}</span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+<!-- End -->
+<!-- Paginations -->
+<footer class="mt-5">
+    <nav aria-label="Page navigation" class="d-flex justify-content-center" id='pagination'>
+        <ul class="pagination justify-content-end">
+            {% if Items.has_previous %}
+            <li class="page-item">
+                <a class="page-link text-monospace" href="?page={{ Items.previous_page_number }}">&laquo; Previous</a>
+            </li>
+            {% endif %}
+            <li class="page-item"><a class="page-link text-monospace">Page {{ Items.number }} of {{ Items.paginator.num_pages }}.</a></li>
+            {% if Items.has_next %}
+            <li class="page-item">
+                <a class="page-link text-monospace" href="?page={{ Items.next_page_number }}">Next &raquo;</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+</footer>
+<!-- End -->
+{% endblock %}
+<!-- Javascript -->
+{% block Js %}
+<script>
+    function Print_List() {
+        var printContent = document.getElementById('printlist');
+        var WinPrint = window.open('', '', 'width=900,height=650');
+        WinPrint.document.write(printContent.innerHTML);
+        WinPrint.document.close();
+        WinPrint.focus();
+        WinPrint.print();
+
+    }
+</script>
+{% endblock %}
