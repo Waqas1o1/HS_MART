@@ -1,11 +1,11 @@
 from django.db import models
 from django.db.models import fields
 import datetime
-from Store_App.models import Khaata
+from Store_App.models import Bill, Item, Khaata
 # Create your models here.
 class Transaction(models.Model):
     Transaction = models.IntegerField(default=0,blank=True)
-    Transaction_Message = models.TextField(null=True,max_length=500) 
+    Transaction_Message = models.TextField(null=True,max_length=20) 
     Credit_Before_Transaction = models.IntegerField(null=True,blank=True)
     Credit_After_Transaction = models.IntegerField(null=True,blank=True)
     Khaata = models.ForeignKey(Khaata,on_delete=models.CASCADE)

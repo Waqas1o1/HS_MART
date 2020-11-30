@@ -8,5 +8,6 @@ urlpatterns = [
     path('Productname/<str:pdtname>',views.AddItemByPdtName),
     path('autosuggest/',views.autosuggest,name="autosuggest"),
     path('GenrateBill_Genrated/',views.GenrateBill_Genrated),
+    path('refund/<int:id>',views.Refund,),
     path('Findkhaata/',views.Find_Khaata,name='Findkhaata'),
 ]

@@ -14,7 +14,7 @@
                     <u>Muhammad Waqas</u>
                 </a>
             </p>
-             <p class="d-flex justify-content-between">
+            <p class="d-flex justify-content-between">
                 <a href="/Home" class="text-light" style="font-weight: 500;">Home</a> |
                 <a href="/Analysis/Transaction/" class="text-light" style="font-weight: 500;">Transaction Analysis</a> |
                 <a href="/Analysis/Stock" class="text-light" style="font-weight: 500;">Stock Analysis</a> |
@@ -49,8 +49,13 @@
         <div class="col-xl-3 col-sm-6 col-md-6 col-6 m-4">
             <div class="card" style="width: 330px;">
                 <div class="card-body">
+                {% if bill.is_refunded_bill %}
+                    <h5 class="card-title">Bill (Refunded) <br></h5>
+                {% else %}
                     <h5 class="card-title">Bill</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">{{bill.Name}}</h6>
+                {% endif %}
+                    <p class='text-danger font-weight-bold'>({{bill.id}})</p>
+                    <h6 class="card-subtitle text-success">{{bill.Name}}</h6>
                     <div class="card-text">
                         <!-- Information -->
                         <table class="table table-responsive ">
@@ -108,7 +113,7 @@
                                 <p class="text-muted">Grand Total :</p>
                                 <p class="text-success">{{bill.Total_Amount}}</p>
                             </div>
-                          
+
                             <div class="d-flex justify-content-between align-items-center">
                                 <p class="text-muted">Cash Deposited :</p>
                                 <p class="text-success">{{bill.cash_deposit}}</p>
@@ -127,7 +132,7 @@
         <!-- End -->
         {% endfor %}
     </div>
-    <footer>
+    <footer class='mt-3'>
         <nav aria-label="Page navigation" class="d-flex justify-content-center" id='pagination'>
             <ul class="pagination justify-content-end">
                 {% if Bill.has_previous %}
@@ -182,9 +187,17 @@
                         bill_str += `
                         <div class="col-xl-3 col-sm-6 col-md-6 col-6 col-mb-5 m-4">
                         <div class="card" style="width: 330px;">
-                            <div class="card-body">
-                                <h5 class="card-title">Bill</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">${d[bill].Name}</h6>
+                            <div class="card-body">`
+                                if (d[bill].is_refunded_bill){
+                                bill_str +=`<h5 class="card-title">Bill (Refunded)</h5>`
+                                }
+                                else{
+                                bill_str +=`<h5 class="card-title">Bill</h5>`
+                                }
+                                
+                                bill_str += `
+                                <p class='text-danger font-weight-bold'>(${d[bill].id})</p>
+                                <h6 class="card-subtitle mb-2 text-success">${d[bill].Name}</h6>
                                 <div class="card-text">
                                     <!-- Information -->
                                     <table class="table table-responsive ">

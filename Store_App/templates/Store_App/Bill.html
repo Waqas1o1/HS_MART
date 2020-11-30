@@ -1,113 +1,109 @@
 <div class="container">
-	{% if Alert != '' %}
-	<div class="alert alert-danger" role="alert">
-  		{% autoescape off %}
-		  {{Alert}}!
-		{% endautoescape %}
-	</div>
-	{% endif %}
+    {% if Alert != '' %}
+    <div class="alert alert-danger" role="alert">
+        {% autoescape off %} {{Alert}}! {% endautoescape %}
+    </div>
+    {% endif %}
     <div class="row">
         <div class="col-md-12">
-    		<div class="invoice-title">
-    			<h2>Invoice</h2><h3 class="pull-right">Order # {{OrderID}}</h3>
-    		</div>
-    		<hr>
-    		<div class="row">
-    			<div class="col-md-6">
-    				<address>
+            <div class="invoice-title">
+                <h2>Invoice</h2>
+                <h3 class="pull-right">Order # {{OrderID}}</h3>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-6">
+                    <address>
     				<strong>Billed To:</strong><br>
     					Account Name: <br><b>{{Khaata.name}} </b><br>
     					Address: <br><b>{{Khaata.email}}</b>
                         Conatct: <br> <b>{{Khaata.contact}}</b> 
     				</address>
-    			</div>
-    			<div class="col-md-6 text-right">
-    				<address>
+                </div>
+                <div class="col-md-6 text-right">
+                    <address>
         			<strong>Shipped To:</strong><br>
     					Customer Name: <br><b>{{CustomerName}}</b> <br:>
     				</address>
-    			</div>
-    		</div>
-    		<div class="row">
-    			<div class="col-md-6">
-    				<address>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <address>
     					<strong>Payment Method:</strong><br>
     					{% if khaata  != ''%}
 						By Khaata<br>
 						{% endif %}
     					{{khaata.email}}
     				</address>
-    			</div>
-    			<div class="col-md-6 text-right">
-    				<address>
+                </div>
+                <div class="col-md-6 text-right">
+                    <address>
     					<strong>Order Date:</strong><br>
     					{{Bill.genrated_date}}<br><br>
     				</address>
-    			</div>
-    		</div>
-    	</div>
-    </div>
-    
-    <div class="row">
-    	<div class="col-md-12">
-    		<div class="panel panel-default">
-    			<div class="panel-heading">
-    				<h3 class="panel-title"><strong>Order summary</strong></h3>
-    			</div>
-    			<div class="panel-body">
-    				<div class="table-responsive">
-    					<table class="table table-condensed">
-    						<thead>
-                                <tr>
-        							<td><strong>Item</strong></td>
-        							<td class="text-center"><strong>Price</strong></td>
-        							<td class="text-center"><strong>Quantity</strong></td>
-        							<td class="text-right"><strong>Totals</strong></td>
-                                </tr>
-    						</thead>
-    						<tbody>
-                                {% for item in CartList %}
-								<tr>
-            					<td>{{item.Name}}</td>
-    							<td class="text-center">Rs.{{ item.Pricse }}</td>
-    							<td class="text-center">{{ item.Quantity }}</td>
-    							<td class="text-right">Rs.{{ item.Total_pricse }}</td>
-    							</tr>
-                                {% endfor %}
-    							<tr>
-    								<td class="thick-line"></td>
-    								<td class="thick-line"></td>
-    								<td class="thick-line text-center"><strong>Subtotal</strong></td>
-    								<td class="thick-line text-right">{{SubTotal}}</td>
-    							</tr>
-    							<tr>
-    								<td class="no-line"></td>
-    								<td class="no-line"></td>
-    								<td class="no-line text-center"><strong>Discount</strong></td>
-    								<td class="no-line text-right">Rs.{{Discount}}</td>
-    							</tr>
-    							<tr>
-    								<td class="no-line"></td>
-    								<td class="no-line"></td>
-    								<td class="no-line text-center"><strong>Total</strong></td>
-    								<td class="no-line text-right">Rs.{{TotalPricse}}</td>
-    							</tr>
-    						</tbody>
-    					</table>
-    				</div>
-						{% if cash_deposit  != '0'%}
-								<div class='d-flex justify-content-around text-danger font-weight-bolder'>
-								<div>Cash Recived: {{cash_deposit}}</div>
-								<div>Cash Return: {{cash_return}}</div>
-								</div>
-						{% endif %}
-    			</div>
-    		</div>
-    	</div>
-    </div>
-</div>
-</div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="Close()">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="">Print Bill</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><strong>Order summary</strong></h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <td><strong>Item</strong></td>
+                                    <td class="text-center"><strong>Price</strong></td>
+                                    <td class="text-center"><strong>Quantity</strong></td>
+                                    <td class="text-right"><strong>Totals</strong></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in CartList %}
+                                <tr>
+                                    <td>{{item.Name}}</td>
+                                    <td class="text-center">Rs.{{ item.Pricse }}</td>
+                                    <td class="text-center">{{ item.Quantity }}</td>
+                                    <td class="text-right">Rs.{{ item.Total_pricse }}</td>
+                                </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td class="thick-line"></td>
+                                    <td class="thick-line"></td>
+                                    <td class="thick-line text-center"><strong>Subtotal</strong></td>
+                                    <td class="thick-line text-right">{{SubTotal}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="no-line"></td>
+                                    <td class="no-line"></td>
+                                    <td class="no-line text-center"><strong>Discount</strong></td>
+                                    <td class="no-line text-right">Rs.{{Discount}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="no-line"></td>
+                                    <td class="no-line"></td>
+                                    <td class="no-line text-center"><strong>Total</strong></td>
+                                    <td class="no-line text-right">Rs.{{TotalPricse}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class='d-flex justify-content-around text-danger font-weight-bolder'>
+                        <div>Cash Recived: {{cash_deposit}}</div>
+                        <div>Cash Return: {{cash_return}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" onclick="Close()">Close</button>
+    <button type="button" class="btn btn-primary" onclick="">Print Bill</button>
+</div>

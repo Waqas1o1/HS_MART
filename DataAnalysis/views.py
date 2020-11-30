@@ -34,14 +34,15 @@ def Bill_Analysis(request):
                 print('only date filter')
                 bill = models.Bill.objects.filter(Q(genrated_date__date__gt=d_f) & Q(genrated_date__date__lte=d_t))[:30]
             send_dict = []
-            
             for b in reversed(bill):
+                print(b.details)
                 detail = json.loads(b.details)
                 sub_total = 0
                 for i in detail:
                     sub_total += i['Pricse']
-                send_dict.append({"Name":b.customer_name,'Total_Amount':b.amount,'Khaata_name':str(b.khaata_name),
+                send_dict.append({"id":b.id,"Name":b.customer_name,'Total_Amount':b.amount,'Khaata_name':str(b.khaata_name),
                                  'genrated_date':b.genrated_date,'details':detail,'SubTotal':sub_total,
+                                 'refunded':b.is_refunded_bill,
                                  'cash_deposit':b.cash_deposit,'cash_return':b.cash_return})
                 print(send_dict)
             d = json.dumps(send_dict,default=str)
@@ -53,9 +54,10 @@ def Bill_Analysis(request):
         sub_total = 0
         for i in detail:
             sub_total += i['Pricse']
-        send_list.append({"Name":b.customer_name,'Total_Amount':b.amount,'Khaata_name':b.khaata_name,
-        'genrated_date':b.genrated_date,'details':detail,'SubTotal':sub_total,
-         'cash_deposit':b.cash_deposit,'cash_return':b.cash_return})
+        send_list.append({'id':b.id,"Name":b.customer_name,'Total_Amount':b.amount,'Khaata_name':b.khaata_name,
+                        'genrated_date':b.genrated_date,'details':detail,'SubTotal':sub_total,
+                        'refunded':b.is_refunded_bill,
+                        'cash_deposit':b.cash_deposit,'cash_return':b.cash_return})
     paginator = Paginator(send_list,10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)

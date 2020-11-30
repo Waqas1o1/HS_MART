@@ -1,5 +1,5 @@
 from datetime import datetime
-from django.http import request
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import render,HttpResponse
 import json
 from .models import Item,Khaata,Bill
@@ -54,6 +54,89 @@ def autosuggest(request):
         send_pdt.append(p.name)
     return HttpResponse(json.dumps(send_pdt,default=str))
 
+def Refund(request,id):
+    try:
+        if request.is_ajax():
+            cartlist = request.POST.get('CartLists')
+            total_amount = request.POST.get('refund_amount')
+            bill = Bill.objects.get(id=id)
+            refund_cartlist = json.loads(cartlist)
+            old_cartlist = json.loads(bill.details)
+            is_change = False
+            print(old_cartlist) 
+            # Find item from old_cart in refund_cart if exit then redetail bill
+            # Refund Item --> Stock  
+            # Refund Bill-->profit, amount, is_refunded_bill, details, is_refunded_bill,refunded_return  ,Khaate---> Credit 
+            for refund in refund_cartlist:
+                for old in old_cartlist:
+                    if refund['Name'] == old['Name']:
+                        if old['Quantity'] >= refund['Quantity']:
+                            old['Quantity'] -= refund['Quantity']
+                            if old['Quantity'] == 0:
+                                i = Item.objects.get(name=old['Name'])
+                                i.stock += refund['Quantity']
+                                i.save()
+                                bill.profit -=  i.retailer_pricse - i.wholesale_pricse
+                                old_cartlist.remove(old)
+                            else:
+                                i = Item.objects.get(name=old['Name'])
+                                i.stock += refund['Quantity']
+                                i.save()
+                                bill.profit -= i.retailer_pricse - i.wholesale_pricse
+                                old['Total_pricse'] = old['Quantity'] * old['Pricse']
+                            is_change = True
+                        else:
+                            return HttpResponse(
+                                '''<span style='font-size:100px;'>&#128536;</span>
+                                    <h3>Lalale ki jan jitni le hain us se zada retuen na kro...</h3></div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" onclick="Close()">Close</button>
+                                    </div>''')
+            if is_change == False:
+                return HttpResponse('''<span style='font-size:100px;'>&#128533;</span>
+                                    <h3>Returning Nhi Ho sakti List Dubara Check Karin.
+                                    <br/>
+                                    Koi product Return Bill main mujood nhi...</h3></div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" onclick="Close()">Close</button>
+                                    </div>''')
+            else:
+                if len(old_cartlist) <= 0:
+                    bill.delete()
+                    return HttpResponse('''<span style='font-size:100px;'>&#128465;</span>
+                                    <h3>Sab Wapaass....</h3></div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" onclick="Close()">Close</button>
+                                    </div>''')
+                k = Khaata.objects.get(name=bill.khaata_name) 
+                k.credit -= int(total_amount)
+                k.save()
+                bill.amount -= int(total_amount)
+                bill.is_refunded_bill = True
+                bill.refunded_return = total_amount
+                bill.details = json.dumps(old_cartlist)
+                bill.save()
+
+            print(old_cartlist)
+
+
+        return HttpResponse('''<span style='font-size:100px;'>&#128530;</span>
+                                <h3>Ho gya wapass Bro ab Jao...</h3></div>
+                                </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" onclick="Close()">Close</button>
+                                    </div>''')
+    except ObjectDoesNotExist:
+        return HttpResponse('''<span style='font-size:100px;'>&#129488;</span>
+                                <h3>Asa Tu kuch Nazer me nhi aata...</h3></div>
+                                </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" onclick="Close()">Close</button>
+                                    </div>''')
+
 def Find_Khaata(request):
     khata_name = request.GET.get('term',None).upper()
     if khata_name is not None:
@@ -61,7 +144,6 @@ def Find_Khaata(request):
         send_pdt = []
         for p in khaaty:
             send_pdt.append(p.name)
-        print(send_pdt)
         return HttpResponse(json.dumps(send_pdt,default=str))
 def GenrateBill_Genrated(request):
     if request.is_ajax():
@@ -91,7 +173,6 @@ def GenrateBill_Genrated(request):
                         rmg_stock = itm.stock - i['Quantity']
                         p += (itm.retailer_pricse - itm.wholesale_pricse) * i['Quantity'] 
                         if  rmg_stock < 0:
-                            print(f'{itm.stock} , {rmg_stock}')
                             return HttpResponse(f'<p style="font-size:100px">&#128556;</p> <h3>Stock me itni  {i["Name"]} nhi hain</h3>''')
                         itm.stock -=  i['Quantity']
                         itm.save()
@@ -144,4 +225,3 @@ def GenrateBill_Genrated(request):
                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Sorry!</button>
                                 </div>
                             ''')
-
