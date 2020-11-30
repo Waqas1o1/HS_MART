@@ -103,7 +103,10 @@ def Refund(request,id):
                                         <button type="button" class="btn btn-secondary" onclick="Close()">Close</button>
                                     </div>''')
             else:
+                k = Khaata.objects.get(name=bill.khaata_name) 
+                k.credit -= int(total_amount)
                 if len(old_cartlist) <= 0:
+                    k.save()
                     bill.delete()
                     return HttpResponse('''<span style='font-size:100px;'>&#128465;</span>
                                     <h3>Sab Wapaass....</h3></div>
@@ -111,8 +114,6 @@ def Refund(request,id):
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" onclick="Close()">Close</button>
                                     </div>''')
-                k = Khaata.objects.get(name=bill.khaata_name) 
-                k.credit -= int(total_amount)
                 k.save()
                 bill.amount -= int(total_amount)
                 bill.is_refunded_bill = True
