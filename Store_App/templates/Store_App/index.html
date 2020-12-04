@@ -205,6 +205,10 @@
                 return;
 
             }
+            if (cash < total | cash < 0) {
+                alert('&$129300 Kamm passa Kabool Nhi....!');
+                return;
+            }
         }
         let send_cart = {
                 'CartLists': JSON.stringify(cartlist),
@@ -220,6 +224,56 @@
             url: 'GenrateBill_Genrated/',
             data: send_cart,
             encode: true,
+            beforeSend: function() {
+                document.getElementById('LoadBillDetails').innerHTML = `<div class='d-flex justify-content-around vh-100 align-items-center'>
+                                                                        <div class="spinner-grow text-primary" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <div class="spinner-grow text-secondary" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <div class="spinner-grow text-success" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <div class="spinner-grow text-danger" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <div class="spinner-grow text-warning" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <div class="spinner-grow text-info" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <div class="spinner-grow text-dark" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        </div>`;
+            },
+            beforeSend: function() {
+                document.getElementById('LoadBillDetails').innerHTML = `<div class='d-flex justify-content-around vh-100 align-items-center'>
+                                                                        <div class="spinner-grow text-primary" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <div class="spinner-grow text-secondary" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <div class="spinner-grow text-success" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <div class="spinner-grow text-danger" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <div class="spinner-grow text-warning" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <div class="spinner-grow text-info" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <div class="spinner-grow text-dark" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        </div>`;
+            },
         }).done(function(data) {
             document.getElementById('LoadBillDetails').innerHTML = data;
         })
@@ -324,6 +378,31 @@
                 url: `Barcode/${value}`,
                 type: 'GET',
                 encode: true,
+                beforeSend: function() {
+                    document.getElementById('LoadBillDetails').innerHTML = `<div class='d-flex justify-content-around vh-100 align-items-center'>
+                                                                        <div class="spinner-grow text-primary" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <div class="spinner-grow text-secondary" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <div class="spinner-grow text-success" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <div class="spinner-grow text-danger" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <div class="spinner-grow text-warning" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <div class="spinner-grow text-info" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <div class="spinner-grow text-dark" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        </div>`;
+                },
                 success: function(data) {
                     if (data != 'Not found') {
                         var item = JSON.parse(data);
@@ -368,6 +447,31 @@
                 url: `Productname/${value}`,
                 type: 'GET',
                 encode: true,
+                beforeSend: function() {
+                    document.getElementById('LoadBillDetails').innerHTML = `<div class='d-flex justify-content-around vh-100 align-items-center'>
+                                                                        <div class="spinner-grow text-primary" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <div class="spinner-grow text-secondary" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <div class="spinner-grow text-success" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <div class="spinner-grow text-danger" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <div class="spinner-grow text-warning" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <div class="spinner-grow text-info" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        <div class="spinner-grow text-dark" role="status">
+                                                                        <span class="sr-only">Loading...</span>
+                                                                        </div>
+                                                                        </div>`;
+                },
                 success: function(data) {
                     if (data != 'Not found') {
                         var item = JSON.parse(data);

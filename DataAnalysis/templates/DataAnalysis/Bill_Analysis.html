@@ -27,7 +27,7 @@
 
 <div class="container">
     <div class="row text-center d-flex justify-content-center flex-column">
-        <div class="ml-4 mr-4">
+        <div class="m-1">
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text text-info">Select Date</span>
@@ -36,18 +36,17 @@
                 <input type="text" placeholder="To" id='Dateto' autocomplete="off" class=" datepicker form-control text-center text-primary font-weight-bold">
             </div>
         </div>
-        <div class="ml-4 mr-4 d-flex justify-content-center">
+        <div class="d-flex justify-content-center">
             <input type="text" placeholder="Enter Khaata Name" class="form-control mt-2 text-center font-weight-bold w-50" id='khaataid'>
         </div>
     </div>
     <div class="d-flex justify-content-center mt-3">
         <button class="btn btn-primary" style="font-weight: 500;" onclick="GetBills()">Get Bill</button>
     </div>
-    <div class="row text-center" id='loadBill'>
+    <div class="row text-center d-flex justify-content-around ml-2" id='loadBill'>
         {% for bill in Bill %}
         <!-- Team item -->
-        <div class="col-xl-3 col-sm-6 col-md-6 col-6 m-4">
-            <div class="card" style="width: 330px;">
+            <div class="card mt-5" style="width: 330px;">
                 <div class="card-body">
                 {% if bill.is_refunded_bill %}
                     <h5 class="card-title">Bill (Refunded) <br></h5>
@@ -102,10 +101,6 @@
                     <div class="card-footer">
                         <p>
                             <div class="d-flex justify-content-between align-items-center">
-                                <p class="text-muted">Sub Total :</p>
-                                <p class="text-success">{{bill.SubTotal}}</p>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center">
                                 <p class="text-muted">Discount :</p>
                                 <p class="text-success">0</p>
                             </div>
@@ -128,7 +123,7 @@
 
                 </div>
             </div>
-        </div>
+        
         <!-- End -->
         {% endfor %}
     </div>
@@ -241,10 +236,6 @@
                                 </div>
                                 <div class="card-footer">
                                     <p>
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <p class="text-muted">Sub Total :</p>
-                                            <p class="text-success">${d[bill].SubTotal}</p>
-                                        </div>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <p class="text-muted">Discount :</p>
                                             <p class="text-success">0</p>
