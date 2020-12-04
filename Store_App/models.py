@@ -3,9 +3,9 @@ from django.db.models.query_utils import select_related_descend
 import datetime as d
 # Create your models here.
 class Item(models.Model):
-    name = models.CharField(unique=True,max_length=30)
+    name = models.CharField(unique=True,max_length=100)
     barcode = models.PositiveIntegerField(unique=True)
-    wholesale_pricse = models.PositiveIntegerField()
+    wholesale_pricse = models.FloatField()
     retailer_pricse = models.PositiveIntegerField()
     stock = models.IntegerField()
     description = models.TextField()
@@ -44,7 +44,7 @@ class Bill(models.Model):
     cash_return = models.CharField(max_length=50,null=True,blank=True)
     genrated_date = models.DateTimeField(default=d.datetime.now())
     is_refunded_bill = models.BooleanField(default=False)
-    refunded_return = models.IntegerField(null=True)
+    refunded_return = models.IntegerField(blank=True)
     details = models.TextField()
     class Meta:
          ordering = ['-genrated_date']

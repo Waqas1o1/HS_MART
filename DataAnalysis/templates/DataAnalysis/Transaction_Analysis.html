@@ -17,13 +17,22 @@
             <p class="d-flex justify-content-between">
                 <a href="/Home/" class="text-dark" style="font-weight: 500;">Home</a> |
                 <a href="/Analysis/ProfitGraph/" class="text-dark" style="font-weight: 500;">Profit</a> |
-                <a href="/Analysis/" class="text-dark" style="font-weight: 500;">Bill Analysis</a>
+                <a href="/Analysis/" class="text-dark" style="font-weight: 500;">Bill Analysis</a> |
                 <a href="/Analysis/Stock" class="text-dark" style="font-weight: 500;">Stock Analysis</a>
             </p>
         </div>
     </div>
 
     <!-- ======= Hero Section ======= -->
+    <div class='d-flex justify-content-around text-info font-weight-bold'>
+    
+    <div>
+    Total Credit:<h5 class='text-danger'>{{credit}}</h5>
+    </div> 
+    <div>
+    Total Return Created: <h5 class='text-danger'>{{Return_credit}}</h5>
+    </div>
+    </div>
     <section id="hero" class="d-flex align-items-center mb-5">
         <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
             <div class='row line'>
@@ -46,6 +55,7 @@
                         </div>
                         <input type="text" class="form-control input-group-text text-center font-weight-bolder" value="{{t.Khaata}}" aria-label="Username " aria-describedby="basic-addon1 ">
                     </div>
+                    <div class='text-dark text-center font-italic font-weight-bold'>{{t.Transaction_Message}}</div>
                 </div>
                 {% endfor %}
             </div>

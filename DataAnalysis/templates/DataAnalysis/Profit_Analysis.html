@@ -1,6 +1,6 @@
 {% extends 'Basic.html' %} {% load static %}
 <!-- Title  -->
-{% block title %} 
+{% block title %}
 <title>Profit Graph</title>
 {% endblock %}
 <!--Custom Css -->
@@ -33,20 +33,31 @@
     <div class="row m-3">
         <div class="input-group d-flex justify-content-center">
             <div class="input-group-prepend">
-                <span class="input-group-text font-weight-bold">Select Year</span>
+                <span class="input-group-text font-weight-bold">Select Month</span>
             </div>
-            <button class="btn dropdown-toggle" style="color: palevioletred;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Year
+            <button class="btn dropdown-toggle text-primary" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Month
             </button>
             <!-- Year FIlter -->
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id='dropdown_menu'>
-
+                <a class="dropdown-item" onclick="Month_Change(this.innerHTML)">1</a>
+                <a class="dropdown-item" onclick="Month_Change(this.innerHTML)">2</a>
+                <a class="dropdown-item" onclick="Month_Change(this.innerHTML)">3</a>
+                <a class="dropdown-item" onclick="Month_Change(this.innerHTML)">4</a>
+                <a class="dropdown-item" onclick="Month_Change(this.innerHTML)">5</a>
+                <a class="dropdown-item" onclick="Month_Change(this.innerHTML)">6</a>
+                <a class="dropdown-item" onclick="Month_Change(this.innerHTML)">7</a>
+                <a class="dropdown-item" onclick="Month_Change(this.innerHTML)">8</a>
+                <a class="dropdown-item" onclick="Month_Change(this.innerHTML)">9</a>
+                <a class="dropdown-item" onclick="Month_Change(this.innerHTML)">10</a>
+                <a class="dropdown-item" onclick="Month_Change(this.innerHTML)">11</a>
+                <a class="dropdown-item" onclick="Month_Change(this.innerHTML)">12</a>
             </div>
         </div>
     </div>
     <div class="row d-flex justify-content-center flex-colum mt-5">
         <div class='graph col-12'>
-            <h3 class=" text-light" id='currentyear'>2020</h3>
+            <h3 class=" text-light" id='currentmonth'>12</h3>
             <span class="fa-1x text-muted">TOTAL ANALYSIS</span>
             <canvas id="pie_chart"></canvas>
         </div>
@@ -60,44 +71,34 @@
 {% endblock %} {% block Js %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 <script>
-    var date = new Date();
-    let year = date.getFullYear();
-    var years = '';
-
-    years = `<input class="dropdown-item" onClick="Year_Change(this.value)" readonly value='${year}'/>`
-    years += `<input class="dropdown-item" onClick="Year_Change(this.value)" readonly value='${year -1}'/>`
-    years += `<input class="dropdown-item" onClick="Year_Change(this.value)" readonly value='${year -2}'/>`
-    years += `<input class="dropdown-item" onClick="Year_Change(this.value)" readonly value='${year -3}'/>`
-    years += `<input class="dropdown-item" onClick="Year_Change(this.value)" readonly value='${year -4}'/>`
-    document.getElementById('dropdown_menu').innerHTML = years;
-
-    function Year_Change(v) {
+    function Month_Change(v) {
         document.getElementById('dropdownMenuButton').innerHTML = v;
-        document.getElementById('currentyear').innerHTML = v;
+        document.getElementById('currentmonth').innerHTML = v;
         Get_Chart(v);
     }
-    Get_Chart('2020');
+    let d = new Date();
+    Get_Chart(d.getMonth() + 1);
 
-    function Get_Chart(y) {
+    function Get_Chart(m) {
         $.ajax({
-            url: `/Analysis/GetGraph/${y}`,
+            url: `/Analysis/GetGraph/${m}`,
             type: 'GET',
             encode: true,
             success: function(data) {
-                var months = []
+                var dates = []
                 var profit = []
                 for (k in data[0]) {
-                    months.push(k)
+                    dates.push(k)
                     profit.push(data[0][k])
                 }
-                Genrate_Chart(months, profit, 'pie_chart');
-                var months = []
+                Genrate_Chart(dates, profit, 'pie_chart');
+                var dates = []
                 var profit = []
                 for (k in data[1]) {
-                    months.push(k)
+                    dates.push(k)
                     profit.push(data[1][k])
                 }
-                Genrate_Chart(months, profit, 'pie_chart2');
+                Genrate_Chart(dates, profit, 'pie_chart2');
             }
         })
     }

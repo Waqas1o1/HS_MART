@@ -1,5 +1,5 @@
 from typing import DefaultDict
-from Store_App.models import Bill, Item
+from Store_App.models import Bill, Item, Khaata
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render
 from Store_App import models
@@ -65,21 +65,20 @@ def Bill_Analysis(request):
 
 def Graph_Analysis(request):
     return render(request,'DataAnalysis/Profit_Analysis.html')
-def Get_Graph(request,year):
+def Get_Graph(request,month):
     if request.is_ajax():
-        print(year)
-        bill = Bill.objects.filter(genrated_date__year=year).values('amount','profit','genrated_date')
+        bill = Bill.objects.filter(genrated_date__month=month).values('amount','profit','genrated_date')
         ls = []
         a = DefaultDict(int)
         p = DefaultDict(int)
         # date = l['genrated_date'].strftime('%d')
         for l in bill:
-            month = l['genrated_date'].strftime('%b')
-            a[month] += int(l['amount']) 
+            month = l['genrated_date'].strftime('%x')
+            a[month] += float(l['amount']) 
         
         for l in bill:
-            month = l['genrated_date'].strftime('%b')
-            p[month] += int(l['profit']) 
+            month = l['genrated_date'].strftime('%x')
+            p[month] += float(l['profit']) 
         
         ls.append(a)
         ls.append(p)
@@ -91,7 +90,14 @@ def Transaction(request):
     paginator = Paginator(transactions,30)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request,'DataAnalysis/Transaction_Analysis.html',{'Transactions':page_obj})
+
+    k = Khaata.objects.values('credit')
+    p = 0
+    ret = 0
+    for c in k:
+        p += max(0,c['credit'])
+        ret += min(0,c['credit'])
+    return render(request,'DataAnalysis/Transaction_Analysis.html',{'Transactions':page_obj,'credit':p,'Return_credit':ret})
 
 
 def Stock(request):

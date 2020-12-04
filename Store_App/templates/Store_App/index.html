@@ -59,11 +59,11 @@
             <label for="#discountpricse" class="text-light mt-2">Discount:</label>
             <input type="number" class="text-center mt-2 input" onkeyup="CalculateTotal()" id='discountpricse' min="0" value='0' placeholder="Discount Pricse">
             <input type="text" class="mt-2 text-center input" id='khaataid' placeholder="Find Khaata">
-            <button type="button" class="btn btn-success mb-2" data-toggle="modal" onclick="GenrateBill_Genrated()" data-target="#exampleModal">
+            <button type="button" class="btn btn-success mb-2" data-toggle="modal" onclick="GenrateBill_Genrated()" id='genratebillbtn' data-target="#exampleModal">
                 Genrate Bill
                 </button>
             <label for="GrandTotal" class="text-warning m-3">Rs.<span id='GrandTotal'>0</span></label>
-            <button type="button" class="btn btn-danger mb-2" data-toggle="modal" onclick="Refund_Bill()" data-target="#exampleModal">
+            <button type="button" class="btn btn-danger mb-2" data-toggle="modal" onclick="Refund_Bill()" id='Refundbtn' data-target="#exampleModal">
                 Refund Bill
             </button>
         </div>
@@ -101,13 +101,36 @@
             </div>
         </div>
     </div>
-    {% endblock %} {% block Js %}
 </div>
+{% endblock %} {% block Js %}
 <!-- Include the image-diff library -->
 <script src="https://cdn.rawgit.com/serratus/quaggaJS/0420d5e0/dist/quagga.min.js "></script>
+<!-- Shourt Cut Keys -->
+<script src="{% static 'Store_App/shortcuts.js' %}">
+</script>
 <!-- Qr / Barcode Scaneer-->
 <!-- Qr Scaner -->
 <script>
+    // ShourtCut Keys
+    shortcuts.add('alt+b', function() {
+        document.getElementById('inputbarcode').focus();
+    })
+    shortcuts.add('alt+n', function() {
+        document.getElementById('productname').focus();
+    })
+    shortcuts.add('alt+k', function() {
+        document.getElementById('khaataid').focus();
+    })
+    shortcuts.add('alt+g', function() {
+        document.getElementById('genratebillbtn').click();
+    })
+    shortcuts.add('alt+r', function() {
+        document.getElementById('Refundbtn').click();
+    })
+    shortcuts.add('alt+m', function() {
+        document.getElementById('discountpricse').focus();
+    })
+
     var code = new Set();
     var cartlist = [];
     document.getElementById('inputbarcode').focus();
