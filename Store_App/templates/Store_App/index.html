@@ -1,4 +1,4 @@
-{% extends 'Basic.html' %}{% load static %} {% block title %}
+ {% extends 'Basic.html' %}{% load static %} {% block title %}
 <title>Hs Mart</title>{% endblock %}
 <!-- Css -->
 <!-- Page CSS -->
@@ -36,8 +36,8 @@
         <div class="alert collapse position-absolute w-100" id='itemalert' role="alert">
             <strong>Item Alart!</strong> <span id='AlertMessage'>No Meaasage</span>
             <button type="button" class="close" data-dismiss="alert" id='closebtn' aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
         <!-- End Alart -->
     </nav>
@@ -60,12 +60,12 @@
             <input type="number" class="text-center mt-2 input" onkeyup="CalculateTotal()" id='discountpricse' min="0" value='0' placeholder="Discount Pricse">
             <input type="text" class="mt-2 text-center input" id='khaataid' placeholder="Find Khaata">
             <button type="button" class="btn btn-success mb-2" data-toggle="modal" onclick="GenrateBill_Genrated()" id='genratebillbtn' data-target="#exampleModal">
-                Genrate Bill
-                </button>
+                    Genrate Bill
+                    </button>
             <label for="GrandTotal" class="text-warning m-3">Rs.<span id='GrandTotal'>0</span></label>
             <button type="button" class="btn btn-danger mb-2" data-toggle="modal" onclick="Refund_Bill()" id='Refundbtn' data-target="#exampleModal">
-                Refund Bill
-            </button>
+                    Refund Bill
+                </button>
         </div>
         <!-- Items Show Table -->
         <!-- Product List Label -->
@@ -93,8 +93,8 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="ModalLabel">Bill</h5>
                     <button type="button" class="close" data-dismiss="modal" onclick="Close()" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                 </div>
                 <div class="modal-body d-flex justify-content-center align-items-center flex-column" id='LoadBillDetails'>
                 </div>
@@ -173,22 +173,22 @@
         if (cartlist.length <= 0) {
             document.getElementById('LoadBillDetails').innerHTML =
                 `<span style='font-size:100px;'>&#128530;</span>
-                            <h3>Kiss ko add Karun...</h3>
-                        </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" data-dismiss="modal">Continue</button> 
-                            </div>`;
+                                <h3>Kiss ko add Karun...</h3>
+                            </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Continue</button> 
+                                </div>`;
             return
         }
         if (khaata_id == '') {
             document.getElementById('LoadBillDetails').innerHTML =
                 `<span style='font-size:100px;'>&#128530;</span>
-                            <h3>Kiss ke Khaata Dalun...</h3>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">Continue</button>
-                            
-                        </div>`;
+                                <h3>Kiss ke Khaata Dalun...</h3>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Continue</button>
+                                
+                            </div>`;
             return
         }
 
@@ -287,30 +287,30 @@
         document.getElementById('genratlist').innerHTML = null;
         for (let item in cartlist.reverse()) {
             document.getElementById('genratlist').innerHTML += `
-                    <ul class="list-group list-group-horizontal mt-2">
-                            <li class="list-group-item list-group-item-primary" style="width:160px">
-                                <button type="button" class="itembtn" onclick='Re_Genrate_LIST(${cartlist[item]['Barcode']})' aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                    ${cartlist[item]['Name']}
-                                </button>
-                            </li>
-                            </li>   
-                            <li class="list-group-item list-group-item-secondary">
-                                <input type="number" id="qty${cartlist[item]['Barcode']}" class='border-0 bg-transparent text-center' onkeyup='QtyChanged(this.id)' value="${cartlist[item]['Quantity']}" min=0>
-                            </li>
-                            <li class="list-group-item list-group-item-warning">
-                                <input type="number" class='border-0 bg-transparent text-center' value="${cartlist[item]['Stock']}" readonly>
-                            </li>
+                        <ul class="list-group list-group-horizontal mt-2">
+                                <li class="list-group-item list-group-item-primary" style="width:160px">
+                                    <button type="button" class="itembtn" onclick='Re_Genrate_LIST(${cartlist[item]['Barcode']})' aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                        ${cartlist[item]['Name']}
+                                    </button>
+                                </li>
+                                </li>   
+                                <li class="list-group-item list-group-item-secondary">
+                                    <input type="number" id="qty${cartlist[item]['Barcode']}" class='border-0 bg-transparent text-center' onkeyup='QtyChanged(this.id)' value="${cartlist[item]['Quantity']}" min=0>
+                                </li>
+                                <li class="list-group-item list-group-item-warning">
+                                    <input type="number" class='border-0 bg-transparent text-center' value="${cartlist[item]['Stock']}" readonly>
+                                </li>
 
 
-                            <li class="list-group-item list-group-item-danger"> 
-                                <input type="text" id="total${cartlist[item]['Barcode']}" class='border-0 bg-transparent text-center' value='${cartlist[item]['Total_pricse']}' min="0 ">
-                            </li>
+                                <li class="list-group-item list-group-item-danger"> 
+                                    <input type="text" id="total${cartlist[item]['Barcode']}" class='border-0 bg-transparent text-center' value='${cartlist[item]['Total_pricse']}' min="0 ">
+                                </li>
 
-                            <li class="list-group-item list-group-item-info" style='width:135px'>
-                                <span class="badge badge-warning badge-pill" id="rep${cartlist[item]['Barcode']}">${cartlist[item]['Pricse']}<span/>
-                            </li>
-                    </ul>`;
+                                <li class="list-group-item list-group-item-info" style='width:135px'>
+                                    <span class="badge badge-warning badge-pill" id="rep${cartlist[item]['Barcode']}">${cartlist[item]['Pricse']}<span/>
+                                </li>
+                        </ul>`;
         }
         CalculateTotal();
     }
@@ -344,8 +344,8 @@
                             let qty = document.getElementById('qty' + item[0]['Barcode']).value;
                             document.getElementById('qty' + item[0]['Barcode']).value = null;
                             document.getElementById('qty' + item[0]['Barcode']).value = parseInt(qty) + 1;
+                            QtyChanged("qty" + item[0]['Barcode']);
                             ShowAlert(`Quantity Incresses ${parseInt(qty) +1}`, 'alert-dark', 2000);
-                            // play('https://actions.google.com/sounds/v1/tools/drill_gear.ogg');
                         }
 
                     } else {
@@ -389,6 +389,7 @@
                             let qty = document.getElementById('qty' + item[0]['Barcode']).value;
                             document.getElementById('qty' + item[0]['Barcode']).value = null;
                             document.getElementById('qty' + item[0]['Barcode']).value = parseInt(qty) + 1;
+                            QtyChanged("qty" + item[0]['Barcode']);
                             ShowAlert(`Quantity Incresses ${parseInt(qty) +1}`, 'alert-dark', 2000);
                             play('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
                         }
