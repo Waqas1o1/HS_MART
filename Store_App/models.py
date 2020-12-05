@@ -44,7 +44,7 @@ class Bill(models.Model):
     cash_return = models.CharField(max_length=50,null=True,blank=True)
     genrated_date = models.DateTimeField(default=d.datetime.now())
     is_refunded_bill = models.BooleanField(default=False)
-    refunded_return = models.IntegerField(blank=True)
+    refunded_return = models.IntegerField(blank=True,null=True)
     details = models.TextField()
     class Meta:
          ordering = ['-genrated_date']

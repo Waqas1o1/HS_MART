@@ -189,7 +189,7 @@
                                 <button type="button" class="btn btn-primary" data-dismiss="modal">Continue</button>
                                 
                             </div>`;
-            return
+            return;
         }
 
         // If Account is Genrat 'G'
@@ -197,19 +197,19 @@
         cash = 0;
         if (khaata == 'G' | khaata == 'g') {
             cash = prompt('Recived Cash');
-            if (cash == null) {
-                return;
-            }
-            if (cash == '') {
-                alert('Kuch to Likho Bhi....!');
-                return;
-
-            }
-            if (cash < total | cash < 0) {
-                alert('&$129300 Kamm passa Kabool Nhi....!');
+            if (cash < total) {
+                document.getElementById('LoadBillDetails').innerHTML =
+                `<span style='font-size:100px;'>&#129322;</span>
+                                <h3>Thore Me thora Lena ka...</h3>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Continue</button>
+                                
+                            </div>`;
                 return;
             }
         }
+        console
         let send_cart = {
                 'CartLists': JSON.stringify(cartlist),
                 'khaata': khaata_id,

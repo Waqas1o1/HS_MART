@@ -55,7 +55,15 @@
             </li>
             {% for item in Items %}
             <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span class="text-info">{{forloop.counter}}</span> {{item.name}}
+                {% if item.stock < 5 %}
+                <span class="text-info">{{forloop.counter}}</span> <span class='text-danger font-weight-bold'>{{item.name}}</span>
+                {% elif item.stock < 10 %}
+                <span class="text-info">{{forloop.counter}}</span> <span class='text-warning font-weight-bold'>{{item.name}}</span>
+                {% elif item.stock < 15 %}
+                <span class="text-info">{{forloop.counter}}</span> <span class='text-secondary font-weight-bold'>{{item.name}}</span>
+                {% else %}
+                <span class="text-info">{{forloop.counter}}</span> <span class='text-info font-weight-bold'>{{item.name}}</span>
+                {% endif %}
                 <span class="badge badge-primary badge-pill">{{item.stock}}</span>
             </li>
             {% endfor %}

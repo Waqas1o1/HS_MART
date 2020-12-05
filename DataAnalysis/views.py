@@ -109,13 +109,12 @@ def Stock(request):
         max = request.POST.get('max')
         if min and max:
             items = Item.objects.filter(Q(stock__gte=min) & Q(stock__lte=max))
-            print(items)
         elif item:
             items = Item.objects.filter(name__icontains=item).values('name','stock')
         else:
             items = Item.objects.all()
         # return render(request,'DataAnalysis/stock.html',{'Items':page_obj})
-    paginator = Paginator(items,50)
+    paginator = Paginator(items.order_by('stock'),50)
     page_number = request.POST.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request,'DataAnalysis/stock.html',{'Items':page_obj})
